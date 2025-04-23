@@ -18,6 +18,7 @@ const Signup = () => {
         setPrivateKey(newAccount.privateKey); // User should save this securely!
     };
 
+    /*
     const registerOnBlockchain = async () => {
         if (!ethAccount) {
             alert("Please generate an Ethereum account first!");
@@ -26,7 +27,9 @@ const Signup = () => {
 
         const contractAddress = "0xEc70747b5b5DE6C4E140F8e10723d7Edf5199976"; // Replace with deployed contract address
         //const contractABI = [...]; // Replace with your contract ABI
-        //const contractABI = require('.build\contracts\PKIAuthold.json').abi;
+        //const contractABI = require('..truffle-pkibckckn\build\contracts\PKIAuthold.json').abi;
+
+
 
         const contract = new web3.eth.Contract(contractABI, contractAddress);
 
@@ -42,7 +45,7 @@ const Signup = () => {
             console.error("Error registering on blockchain:", error);
         }
     };
-
+*/
     return (
         <div className="container">
             <h2>Signup</h2>
@@ -62,7 +65,7 @@ const Signup = () => {
                 </div>
             )}
 
-            <button onClick={registerOnBlockchain}>Register</button>
+            <button >Register</button>
         </div>
     );
 };
