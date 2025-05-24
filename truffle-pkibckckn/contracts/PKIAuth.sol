@@ -71,9 +71,13 @@ contract PKIAuth {
     // Retrieve user details
     function getUserDetails(
         address user
-    ) public view returns (string memory, bytes[] memory) {
+    ) public view returns (string memory, string memory, bytes[] memory) {
         require(users[user].exists, "User not found");
-        return (users[user].username, users[user].publicKeys);
+        return (
+            users[user].username,
+            users[user].email,
+            users[user].publicKeys
+        );
     }
     // Check if a user is registered
     function isUserRegistered(address user) public view returns (bool) {
@@ -92,58 +96,5 @@ contract PKIAuth {
 
     function getAllUsers() public view returns (address[] memory) {
         return userAddresses; // Returns the list of user addresses
-    }
-}
-
-contract PKIAuthold {
-    // Mapping to store public keys by user address (this is a hash table)
-    mapping(address => bytes) public publicKeys;
-
-    // Event emitted when a public key is registered
-    event PublicKeyRegistered(address indexed user, bytes publicKey);
-    event PublicKeyUpdated(address indexed user, bytes newPublicKey);
-    event PublicKeyDeleted(address indexed user);
-
-    /**
-     * @dev Registers a public key for the sender.
-     * @param publicKey The public key to register (must be a valid ECDSA public key).
-     * Requirements:
-     * - `publicKey` cannot be empty.
-     */
-    function registerPublicKey(bytes memory publicKey) public {
-        require(publicKey.length > 0, "Public key cannot be empty");
-        require(
-            publicKeys[msg.sender].length == 0,
-            "Public key already registered"
-        );
-
-        publicKeys[msg.sender] = publicKey;
-
-        emit PublicKeyRegistered(msg.sender, publicKey);
-    }
-
-    /**
-     * @dev Checks if a user has registered a public key.
-     * @param user The address of the user to verify.
-     * @return True if the user has a registered public key, false otherwise.
-     */
-    function isPublicKeyRegistered(address user) public view returns (bool) {
-        return publicKeys[user].length > 0;
-    }
-
-    //Function to update a public key
-    function updatePublicKey(bytes memory _newPublicKey) external {
-        require(_newPublicKey.length > 0, "Invalid public key");
-        require(publicKeys[msg.sender].length > 0, "Public key not registered");
-
-        publicKeys[msg.sender] = _newPublicKey;
-        emit PublicKeyUpdated(msg.sender, _newPublicKey);
-    }
-
-    //Function to delete a public key
-    function deletePublicKey() external {
-        require(publicKeys[msg.sender].length > 0, "Public key not registered");
-        delete publicKeys[msg.sender];
-        emit PublicKeyDeleted(msg.sender);
     }
 }

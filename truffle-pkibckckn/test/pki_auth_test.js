@@ -43,21 +43,24 @@ contract("PKIAuth", async (accounts) => {
     it("should display all available users", async () => {
         for (let i = 0; i < accounts.length; i++) {
             let isRegistered = await pkiAuthInstance.isUserRegistered(accounts[i]);
-
+    
             if (isRegistered) {
-                let userDetails = await pkiAuthInstance.getUserDetails(accounts[i]);
-                let username = userDetails[0];
-                let publicKeys = userDetails[1]; // Public keys array
-
+                const userDetails = await pkiAuthInstance.getUserDetails(accounts[i]);
+                const username = userDetails[0];
+                const email = userDetails[1];
+                const publicKeys = userDetails[2];
+    
                 console.log(`✅ Account ${i} (${accounts[i]}) is registered.`);
                 console.log(`   Username: ${username}`);
+                console.log(`   Email: ${email}`);
                 console.log(`   Public Keys: ${publicKeys.map(pk => web3.utils.bytesToHex(pk))}`);
             } else {
                 console.log(`❌ Account ${i} (${accounts[i]}) is not registered.`);
             }
         }
     });
-    //NEXT TEST CASES CREATE AN ACCOUNT UPON REGISTRATION. WITH SOME AS. WHICH MEANS, WHEN USER CREATION TAKES PLACE, A PARALLEL ACCOUNT IS CREATED ON GANACHE
+    //Insert user details to ganache account on cli.
+    // NEXT TEST CASES CREATE AN ACCOUNT UPON REGISTRATION. WITH SOME AS. WHICH MEANS, WHEN USER CREATION TAKES PLACE, A PARALLEL ACCOUNT IS CREATED ON GANACHE
     //
 });
 
