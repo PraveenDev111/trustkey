@@ -1,8 +1,8 @@
 import Web3 from 'web3';
-import PKIAuthABI from './contracts/PKIAuth.json';
+import UserAuthABI from './contracts/UserAuth.json';
 
 // Contract address from deployment
-const CONTRACT_ADDRESS = '0x76E4D076eBF8Bbf5382E10c15FdE186D9193ea5f';
+const CONTRACT_ADDRESS = '0x4f8D435d29640169F0450f90812ece8170c17dFC';
 
 let web3Instance;
 let contractInstance;
@@ -62,7 +62,7 @@ export const initContract = async () => {
     
     // Create contract instance
     const contract = new web3Instance.eth.Contract(
-      PKIAuthABI.abi,
+      UserAuthABI.abi,
       CONTRACT_ADDRESS
     );
 
