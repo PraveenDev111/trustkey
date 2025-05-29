@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import crypto from 'crypto';
+//import crypto from 'crypto';
 import { initWeb3, initContract, web3Instance } from '../web3';
+import { ec as EC } from 'elliptic';
 
 const RegisterUserNoMetaMask = () => {
   const [email, setEmail] = useState('');
@@ -12,9 +13,12 @@ const RegisterUserNoMetaMask = () => {
   const [privateKey, setPrivateKey] = useState('');
 
   useEffect(() => {
+    console.log('Component mounted, initializing contract...');
     const initializeContract = async () => {
       try {
+        console.log('Calling initContract...');
         const contractInstance = await initContract();
+        console.log('Contract instance:', contractInstance ? 'Success' : 'Failed');
         if (contractInstance) {
           setContract(contractInstance);
         }
@@ -29,18 +33,17 @@ const RegisterUserNoMetaMask = () => {
   // Generate key pair
   const generateKeys = () => {
     try {
-      // Generate private key (32 bytes)
-      const privateKeyBytes = crypto.randomBytes(32);
-      const privateKeyHex = `0x${privateKeyBytes.toString('hex')}`;
+      // Generate random private key
+      const privateKeyHex = web3Instance.utils.randomHex(32);
+      
+      // Generate public key from private key
+      const ec = new EC('secp256k1');
+      const keyPair = ec.keyFromPrivate(privateKeyHex.replace('0x', ''), 'hex');
+      const publicKeyHex = '0x' + keyPair.getPublic('hex');
+      
       setPrivateKey(privateKeyHex);
-
-      // Generate public key from private key using ECDSA
-      const keyPair = crypto.createECDH('secp256k1');
-      keyPair.setPrivateKey(privateKeyBytes);
-      const publicKeyBytes = keyPair.getPublicKey();
-      const publicKeyHex = `0x${publicKeyBytes.toString('hex')}`;
       setPublicKey(publicKeyHex);
-
+      
       return { publicKeyHex, privateKeyHex };
     } catch (error) {
       console.error('Key generation error:', error);
@@ -68,18 +71,24 @@ const RegisterUserNoMetaMask = () => {
     try {
       // Convert hex string to bytes
       const publicKeyBytes = web3Instance.utils.hexToBytes(publicKey);
-
+      const account = web3Instance.eth.accounts.privateKeyToAccount(privateKey);
+  
+      // Add the account to web3's wallet
+      web3Instance.eth.accounts.wallet.add(account);
+      web3Instance.eth.defaultAccount = account.address;
+  
       // Register the user
       await contract.methods.registerUser(email, username, publicKeyBytes).send({
-        from: '0x0000000000000000000000000000000000000000' // Using a special address for non-MetaMask
+        from: account.address,
+        gas: 3000000 // Adjust gas limit as needed
       });
-
+  
       // Reset form
       setEmail('');
       setUsername('');
       setPublicKey('');
       setPrivateKey('');
-
+  
       alert('Registration successful! Please keep your private key secure.');
     } catch (error) {
       console.error('Registration failed:', error);

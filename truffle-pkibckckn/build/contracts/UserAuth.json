@@ -85,7 +85,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -109,7 +110,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -138,7 +140,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -157,7 +160,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"}],\"name\":\"PublicKeyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"username\",\"type\":\"string\"}],\"name\":\"UserRegistered\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"generateChallenge\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"challenge\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getUserDetails\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"isUserRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"username\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"}],\"name\":\"registerUser\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"solution\",\"type\":\"bytes\"}],\"name\":\"verifySolution\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/UserAuth.sol\":\"UserAuth\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/UserAuth.sol\":{\"keccak256\":\"0x29a979a6f05369100c9061becbfbf5e30a4470d0fae1cac80b23eb02765f735d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e7c2e368ec1d28ae8f196c812f21d593318ad5634c189e636748d516a350f558\",\"dweb:/ipfs/QmTpGgUhbDNU6B2smrt3nCup2sp5tfRiq7cj5M15Bzv2GU\"]}},\"version\":1}",
@@ -12629,10 +12633,23 @@
       "links": {},
       "address": "0x4f8D435d29640169F0450f90812ece8170c17dFC",
       "transactionHash": "0x558de28fa621f3dae2d38891449163eae0f5e9157cc94d384f6b8168fce97335"
+    },
+    "1748136291212": {
+      "events": {},
+      "links": {},
+      "address": "0xAC7bBF72f9CcfC1c98C74C8F3b8396059A80e1Dc",
+      "transactionHash": "0xe1f8dbb57bbbcb6c0cd99a62ae78f3ec6e25579e9a224587eaaec0b1b08ffc27"
+    },
+    "1748340802545": {
+      "events": {},
+      "links": {},
+      "address": "0x7776e99dE5655eC5Fb164820d6C0f11f656D281C",
+      "transactionHash": "0xe6dd5cfaa9434817de42df429eb0101f8e0b9fe267f4f5f985777db3150403e4"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-05-24T02:41:09.698Z",
+  "updatedAt": "2025-05-27T10:14:06.659Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

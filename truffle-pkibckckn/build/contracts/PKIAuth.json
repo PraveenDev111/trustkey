@@ -139,7 +139,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -158,7 +159,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -178,7 +180,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"username\",\"type\":\"string\"}],\"name\":\"PublicKeyDeleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"username\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"}],\"name\":\"PublicKeyRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"newPublicKey\",\"type\":\"bytes\"}],\"name\":\"PublicKeyUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"deletePublicKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllUsers\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getUserDetails\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"\",\"type\":\"bytes[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"isUserRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"username\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"}],\"name\":\"registerPublicKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"newPublicKey\",\"type\":\"bytes\"}],\"name\":\"updatePublicKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"A smart contract for managing public key authentication.      Users can register and verify their public keys to enable authentication.     The user data along with Public key is stored here\",\"kind\":\"dev\",\"methods\":{\"registerPublicKey(string,string,bytes)\":{\"details\":\"Registers a public key for the sender.\",\"params\":{\"email\":\"The email of the user.\",\"publicKey\":\"The public key to register (must be a valid ECDSA public key). Requirements: - `email` cannot be empty. - `username` cannot be empty. - `publicKey` cannot be empty.\",\"username\":\"The username of the user.\"}}},\"title\":\"PKIAuth\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/PKIAuth.sol\":\"PKIAuth\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/PKIAuth.sol\":{\"keccak256\":\"0xbf02581087f36daca68351b3c2d7a9eda01f12b49a940d7625fad5bd5289757f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6c83751a05551fac48783b9cc27d7f2dced3856113fd5621a9f6533b1e8f96e9\",\"dweb:/ipfs/QmNfoPsRsMzsRXrkWNUAHifncowZiGprDJSgK8BiLGMSP9\"]}},\"version\":1}",
@@ -13804,10 +13807,23 @@
       "links": {},
       "address": "0x7edC50753C558cF33351C3B15793B8B01e3c6104",
       "transactionHash": "0xf426e1106301d8f05c6b7f7072527217fddd105fac52caaa0b67c8556e09f19b"
+    },
+    "1748136291212": {
+      "events": {},
+      "links": {},
+      "address": "0x0c36F3a674d7Dd2A8C0efe8F29B50211bd435d93",
+      "transactionHash": "0xe27abe64093a4447969f134b8dde75e196e5324a59d1c4b5cd10ecb0410c9720"
+    },
+    "1748340802545": {
+      "events": {},
+      "links": {},
+      "address": "0x145fD13d5FE7f5322f17ff90c011d26D71d4FF3B",
+      "transactionHash": "0x87accbb83d1ba2fb7940b0a2e5868547bec2c6d984e373f833324dda0d5cd043"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-05-24T02:41:09.678Z",
+  "updatedAt": "2025-05-27T10:14:06.322Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "A smart contract for managing public key authentication.      Users can register and verify their public keys to enable authentication.     The user data along with Public key is stored here",
     "kind": "dev",

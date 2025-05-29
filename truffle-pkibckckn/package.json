@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }
