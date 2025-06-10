@@ -1,8 +1,8 @@
 import Web3 from 'web3';
 import UserAuthABI from './contracts/UserAuth.json';
-
+//import { CONTRACT_ADDRESS } from './config'; // Adjust the import path as needed
 // Contract address from deployment
-const CONTRACT_ADDRESS = '0x7776e99dE5655eC5Fb164820d6C0f11f656D281C';
+import { CONTRACT_ADDRESS } from './config';
 
 let web3Instance;
 let contractInstance;

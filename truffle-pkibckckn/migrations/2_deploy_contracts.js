@@ -1,5 +1,5 @@
-const PKIAuth = artifacts.require("PKIAuth");
+const UserAuth = artifacts.require("UserAuth");
 
 module.exports = function (deployer) {
-    deployer.deploy(PKIAuth);
+    deployer.deploy(UserAuth);
 };
