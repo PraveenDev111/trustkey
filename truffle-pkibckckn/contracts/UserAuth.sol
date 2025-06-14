@@ -11,6 +11,7 @@ contract UserAuth {
 
     mapping(address => User) private users;
     mapping(bytes => address) private publicKeyToAddress;
+    address[] private registeredUsers; // Track all registered user addresses
 
     event UserRegistered(address indexed user, string email, string username);
     event PublicKeyUpdated(address indexed user, bytes publicKey);
@@ -31,6 +32,7 @@ contract UserAuth {
         });
 
         publicKeyToAddress[publicKey] = msg.sender;
+        registeredUsers.push(msg.sender);
 
         emit UserRegistered(msg.sender, email, username);
     }
@@ -73,5 +75,21 @@ contract UserAuth {
     // Check if user exists
     function isUserRegistered(address user) public view returns (bool) {
         return users[user].exists;
+    }
+
+    // Get total number of registered users
+    function getUserCount() public view returns (uint) {
+        return registeredUsers.length;
+    }
+
+    // Get user address by index
+    function getUserByIndex(uint index) public view returns (address) {
+        require(index < registeredUsers.length, "Index out of bounds");
+        return registeredUsers[index];
+    }
+
+    // Get all registered users (use with caution for large numbers of users)
+    function getAllUsers() public view returns (address[] memory) {
+        return registeredUsers;
     }
 }
