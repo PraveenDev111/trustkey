@@ -29,3 +29,103 @@
   signatureVerification: 2 calls, avg 273.59ms
   jwtIssuance: 2 calls, avg 34.44ms
 
+{"timestamp":"2025-06-15 21:06:07","operation":"nonceGeneration","durationMs":1281.88,"status":"failure","type":"login","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1","metadata":{"reason":"unregistered_user"}}
+{"timestamp":"2025-06-15 21:06:22","operation":"nonceGeneration","durationMs":86.18,"status":"failure","type":"login","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1","metadata":{"reason":"unregistered_user"}}
+[2025-06-15 21:10:39] Performance Metrics:
+  nonceGeneration: 2 calls, avg 684.03ms
+
+{"timestamp":"2025-06-15 21:24:26","operation":"nonceGeneration","durationMs":34.41,"status":"success","type":"nonce_issued","address":"0x797d5fb38db1f4753baa700095688571d30ca670","ip":"::1"}
+[2025-06-16 00:25:24] Performance Metrics:
+  nonceGeneration: 1 calls, avg 34.41ms
+
+{"timestamp":"2025-06-16 10:28:47","operation":"nonceGeneration","durationMs":543.29,"status":"success","type":"nonce_issued","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1"}
+{"timestamp":"2025-06-16 10:28:56","operation":"verifyMessage","durationMs":178.49}
+{"timestamp":"2025-06-16 10:28:56","operation":"sign","durationMs":114.12}
+{"timestamp":"2025-06-16 10:28:56","operation":"signatureVerification","durationMs":304.02,"status":"success","type":"login","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":178.4854,"tokenGenerationTimeMs":114.1188}}
+{"timestamp":"2025-06-16 10:28:56","operation":"jwtIssuance","durationMs":122.08,"status":"success","type":"login","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":178.4854,"tokenGenerationTimeMs":114.1188}}
+[2025-06-16 10:32:04] Performance Metrics:
+  nonceGeneration: 1 calls, avg 543.29ms
+  signatureVerification: 2 calls, avg 241.25ms
+  jwtIssuance: 2 calls, avg 118.10ms
+
+{"timestamp":"2025-06-16 10:57:53","operation":"nonceGeneration","durationMs":67.75,"status":"success","type":"nonce_issued","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1"}
+{"timestamp":"2025-06-16 10:59:02","operation":"nonceGeneration","durationMs":31.23,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 10:59:09","operation":"verifyMessage","durationMs":26.64}
+{"timestamp":"2025-06-16 10:59:09","operation":"sign","durationMs":4.28}
+{"timestamp":"2025-06-16 10:59:09","operation":"signatureVerification","durationMs":50.93,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":26.6408,"tokenGenerationTimeMs":4.2806}}
+{"timestamp":"2025-06-16 10:59:09","operation":"jwtIssuance","durationMs":30.2,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":26.6408,"tokenGenerationTimeMs":4.2806}}
+[2025-06-16 11:02:04] Performance Metrics:
+  nonceGeneration: 2 calls, avg 49.49ms
+  signatureVerification: 2 calls, avg 38.79ms
+  jwtIssuance: 2 calls, avg 17.24ms
+
+{"timestamp":"2025-06-16 11:03:20","operation":"nonceGeneration","durationMs":29.26,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 11:03:24","operation":"verifyMessage","durationMs":11.72}
+{"timestamp":"2025-06-16 11:03:24","operation":"sign","durationMs":2.25}
+{"timestamp":"2025-06-16 11:03:24","operation":"signatureVerification","durationMs":28.98,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":11.72,"tokenGenerationTimeMs":2.2482}}
+{"timestamp":"2025-06-16 11:03:24","operation":"jwtIssuance","durationMs":17.97,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":11.72,"tokenGenerationTimeMs":2.2482}}
+{"timestamp":"2025-06-16 11:06:49","operation":"nonceGeneration","durationMs":68.17,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 11:06:54","operation":"verifyMessage","durationMs":13.65}
+{"timestamp":"2025-06-16 11:06:54","operation":"sign","durationMs":4.48}
+{"timestamp":"2025-06-16 11:06:54","operation":"signatureVerification","durationMs":29.66,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":13.647,"tokenGenerationTimeMs":4.4807}}
+{"timestamp":"2025-06-16 11:06:54","operation":"jwtIssuance","durationMs":15.64,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":13.647,"tokenGenerationTimeMs":4.4807}}
+[2025-06-16 11:07:04] Performance Metrics:
+  nonceGeneration: 2 calls, avg 48.71ms
+  signatureVerification: 4 calls, avg 21.00ms
+  jwtIssuance: 4 calls, avg 10.08ms
+
+{"timestamp":"2025-06-16 11:23:04","operation":"nonceGeneration","durationMs":72.78,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 11:23:09","operation":"verifyMessage","durationMs":161.17}
+{"timestamp":"2025-06-16 11:23:09","operation":"sign","durationMs":3.77}
+{"timestamp":"2025-06-16 11:23:09","operation":"signatureVerification","durationMs":179.86,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":161.1701,"tokenGenerationTimeMs":3.7663}}
+{"timestamp":"2025-06-16 11:23:09","operation":"jwtIssuance","durationMs":19.89,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":161.1701,"tokenGenerationTimeMs":3.7663}}
+[2025-06-16 11:26:03] Performance Metrics:
+  nonceGeneration: 1 calls, avg 72.78ms
+  signatureVerification: 2 calls, avg 170.52ms
+  jwtIssuance: 2 calls, avg 11.83ms
+
+{"timestamp":"2025-06-16 11:38:15","operation":"nonceGeneration","durationMs":99.02,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 11:38:24","operation":"verifyMessage","durationMs":170.91}
+{"timestamp":"2025-06-16 11:38:24","operation":"sign","durationMs":7.45}
+{"timestamp":"2025-06-16 11:38:24","operation":"signatureVerification","durationMs":185.18,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":170.9098,"tokenGenerationTimeMs":7.4506}}
+{"timestamp":"2025-06-16 11:38:24","operation":"jwtIssuance","durationMs":14.52,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":170.9098,"tokenGenerationTimeMs":7.4506}}
+[2025-06-16 11:41:38] Performance Metrics:
+  nonceGeneration: 1 calls, avg 99.02ms
+  signatureVerification: 2 calls, avg 178.04ms
+  jwtIssuance: 2 calls, avg 10.99ms
+
+{"timestamp":"2025-06-16 14:02:24","operation":"nonceGeneration","durationMs":449.59,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 14:02:28","operation":"verifyMessage","durationMs":112.09}
+{"timestamp":"2025-06-16 14:02:28","operation":"sign","durationMs":4.96}
+{"timestamp":"2025-06-16 14:02:28","operation":"signatureVerification","durationMs":125.98,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":112.0874,"tokenGenerationTimeMs":4.961}}
+{"timestamp":"2025-06-16 14:02:28","operation":"jwtIssuance","durationMs":13.4,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":112.0874,"tokenGenerationTimeMs":4.961}}
+[2025-06-16 14:02:58] Performance Metrics:
+  nonceGeneration: 1 calls, avg 449.59ms
+  signatureVerification: 2 calls, avg 119.04ms
+  jwtIssuance: 2 calls, avg 9.18ms
+
+{"timestamp":"2025-06-16 14:05:28","operation":"nonceGeneration","durationMs":38.31,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 14:05:35","operation":"verifyMessage","durationMs":10.77}
+{"timestamp":"2025-06-16 14:05:35","operation":"sign","durationMs":2.49}
+{"timestamp":"2025-06-16 14:05:35","operation":"signatureVerification","durationMs":26.77,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":10.7743,"tokenGenerationTimeMs":2.4858}}
+{"timestamp":"2025-06-16 14:05:35","operation":"jwtIssuance","durationMs":17.37,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":10.7743,"tokenGenerationTimeMs":2.4858}}
+{"timestamp":"2025-06-16 14:07:52","operation":"nonceGeneration","durationMs":37.4,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 14:07:57","operation":"verifyMessage","durationMs":14.84}
+{"timestamp":"2025-06-16 14:07:57","operation":"sign","durationMs":2.4}
+{"timestamp":"2025-06-16 14:07:57","operation":"signatureVerification","durationMs":44.04,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":14.8448,"tokenGenerationTimeMs":2.4044}}
+{"timestamp":"2025-06-16 14:07:57","operation":"jwtIssuance","durationMs":20.56,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":14.8448,"tokenGenerationTimeMs":2.4044}}
+[2025-06-16 14:07:58] Performance Metrics:
+  nonceGeneration: 2 calls, avg 37.86ms
+  signatureVerification: 4 calls, avg 24.11ms
+  jwtIssuance: 4 calls, avg 10.70ms
+
+{"timestamp":"2025-06-16 15:09:55","operation":"nonceGeneration","durationMs":144.03,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-16 15:10:06","operation":"verifyMessage","durationMs":177.58}
+{"timestamp":"2025-06-16 15:10:06","operation":"sign","durationMs":3.6}
+{"timestamp":"2025-06-16 15:10:06","operation":"signatureVerification","durationMs":192.89,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":177.5799,"tokenGenerationTimeMs":3.5971}}
+{"timestamp":"2025-06-16 15:10:06","operation":"jwtIssuance","durationMs":15.15,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":177.5799,"tokenGenerationTimeMs":3.5971}}
+[2025-06-16 15:10:41] Performance Metrics:
+  nonceGeneration: 1 calls, avg 144.03ms
+  signatureVerification: 2 calls, avg 185.23ms
+  jwtIssuance: 2 calls, avg 9.37ms
+

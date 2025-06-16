@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import RegisterUserMetaMask from './pages/RegisterUserMetaMask';
 import UserList from './pages/userlist';
 
@@ -48,6 +49,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
             </ProtectedRoute>
           } 
         />

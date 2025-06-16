@@ -1,104 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ethers } from 'ethers';
-import { EC } from 'elliptic';
-import { initContract, web3Instance } from '../utils/web3';
-import { logEvent, withPerformanceLogging } from '../utils/logger';
-import '../styles/RegisterUserMetaMask.css';
+//import crypto from 'crypto';
+// eslint-disable-next-line
+import { initWeb3, initContract, web3Instance } from '../web3';
+import { Link } from 'react-router-dom';
 import logo from '../assets/trustkey2.png';
+import { ec as EC } from 'elliptic';
 import { CONTRACT_ADDRESS } from '../config';
 import { FaArrowLeft, FaKey, FaCopy, FaCheck } from 'react-icons/fa';
+import './RegisterUserMetaMask.css';
 
 const RegisterUserMetaMask = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // eslint-disable-next-line
   const [success, setSuccess] = useState('');
   const [contract, setContract] = useState(null);
   const [publicKey, setPublicKey] = useState('');
   const [privateKey, setPrivateKey] = useState('');
   const [copied, setCopied] = useState(false);
-  const navigate = useNavigate();
 
-  // Initialize web3 and contract
   useEffect(() => {
-    console.log('Component mounted, initializing contract and web3...');
-    
-    const initialize = async () => {
+    console.log('Component mounted, initializing contract...');
+    const initializeContract = async () => {
       try {
-        console.log('Initializing web3 and contract...');
+        console.log('Calling initContract...');
         const contractInstance = await initContract();
         console.log('Contract instance:', contractInstance ? 'Success' : 'Failed');
-        
-        if (window.ethereum && contractInstance) {
-          // Request account access if needed
-          await window.ethereum.enable();
+        if (contractInstance) {
           setContract(contractInstance);
-          
-          // Log successful initialization
-          await logEvent('web3_initialized', null, {
-            networkId: await web3Instance.eth.net.getId(),
-            contractAddress: CONTRACT_ADDRESS
-          });
-        } else {
-          throw new Error('Failed to initialize Web3 or contract');
         }
       } catch (error) {
-        console.error('Initialization error:', error);
-        setError('Failed to initialize Web3 and contract');
-        logEvent('initialization_error', null, {
-          error: error.message,
-          stack: error.stack
-        });
+        console.error('Contract initialization error:', error);
+        setError('Failed to initialize contract');
       }
     };
-    
-    initialize();
+    initializeContract();
   }, []);
 
   // Generate key pair
-  const generateKeys = async () => {
+  const generateKeys = () => {
     try {
-      await logEvent('key_generation_started', null);
+      // Generate random private key
+      const privateKeyHex = web3Instance.utils.randomHex(32);
       
-      const { result: keys, duration } = await withPerformanceLogging(
-        'generate_keys',
-        async () => {
-          // Generate random private key
-          const privateKeyHex = ethers.utils.hexlify(ethers.utils.randomBytes(32));
-          
-          // Generate public key from private key
-          const ec = new EC('secp256k1');
-          const keyPair = ec.keyFromPrivate(privateKeyHex.replace('0x', ''), 'hex');
-          const publicKeyHex = '0x' + keyPair.getPublic('hex');
-          
-          return { publicKeyHex, privateKeyHex };
-        },
-        { step: 'key_generation' }
-      );
+      // Generate public key from private key
+      const ec = new EC('secp256k1');
+      const keyPair = ec.keyFromPrivate(privateKeyHex.replace('0x', ''), 'hex');
+      const publicKeyHex = '0x' + keyPair.getPublic('hex');
       
-      setPrivateKey(keys.privateKeyHex);
-      setPublicKey(keys.publicKeyHex);
+      setPrivateKey(privateKeyHex);
+      setPublicKey(publicKeyHex);
       
-      // Log successful key generation
-      await logEvent('key_generation_success', null, { 
-        duration,
-        publicKey: keys.publicKeyHex,
-        privateKeyLength: keys.privateKeyHex.length
-      });
-      
-      return keys;
+      return { publicKeyHex, privateKeyHex };
     } catch (error) {
       console.error('Key generation error:', error);
       setError('Failed to generate keys');
-      
-      // Log key generation failure
-      await logEvent('key_generation_error', null, {
-        error: error.message,
-        stack: error.stack
-      });
-      
       return null;
     }
   };
@@ -106,55 +64,43 @@ const RegisterUserMetaMask = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!email || !username) {
+      setError('Please fill in email and username');
+      return;
+    }
+  
+    if (!publicKey || !privateKey) {
+      setError('Please generate keys first');
+      return;
+    }
+  
     setLoading(true);
     setError('');
-    
-    let metaMaskAccount;
-    
-    try {
-      // Log registration attempt
-      await logEvent('registration_started', null, { username, email });
-      
-      // 1. Get accounts from MetaMask
-      await logEvent('metamask_connection_started', null);
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      metaMaskAccount = accounts[0];
-      await logEvent('metamask_connected', metaMaskAccount, { accountCount: accounts.length });
   
-      // 2. Generate keys if not already generated
-      if (!publicKey || !privateKey) {
-        await logEvent('key_generation_required', metaMaskAccount);
-        const keys = await generateKeys();
-        if (!keys) throw new Error('Failed to generate keys');
-      }
-      
-      // 3. Convert public key to bytes
-      await logEvent('preparing_public_key', metaMaskAccount);
+    try {
+      console.log('1. Getting accounts from MetaMask...');
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const metaMaskAccount = accounts[0];
+      console.log('2. MetaMask account:', metaMaskAccount);
+  
+      console.log('3. Converting public key to bytes...');
       const cleanPublicKey = publicKey.startsWith('0x') ? publicKey : `0x${publicKey}`;
       const publicKeyBytes = web3Instance.utils.hexToBytes(cleanPublicKey);
-      
-      // 4. Check account balance
-      await logEvent('checking_balance', metaMaskAccount);
-      const balance = await web3Instance.eth.getBalance(metaMaskAccount);
-      const balanceEth = web3Instance.utils.fromWei(balance, 'ether');
-      await logEvent('balance_checked', metaMaskAccount, { balance: balanceEth });
-      
-      if (parseFloat(balanceEth) < 0.001) {
-        throw new Error('Insufficient balance for transaction');
-      }
+      console.log('4. Public key bytes:', publicKeyBytes);
   
-      // 5. Get transaction nonce
-      await logEvent('getting_nonce', metaMaskAccount);
+      console.log('5. Checking MetaMask account balance...');
+      const balance = await web3Instance.eth.getBalance(metaMaskAccount);
+      console.log('Account balance:', web3Instance.utils.fromWei(balance, 'ether'), 'ETH');
+  
+      console.log('6. Getting nonce...');
       const nonce = await web3Instance.eth.getTransactionCount(metaMaskAccount, 'pending');
       
-      // 6. Prepare transaction
-      await logEvent('preparing_transaction', metaMaskAccount, { nonce });
-      const gasPrice = await web3Instance.eth.getGasPrice();
+      console.log('7. Preparing transaction...');
       const tx = {
         from: metaMaskAccount,
         to: CONTRACT_ADDRESS,
         nonce: web3Instance.utils.toHex(nonce),
-        gasPrice,
+        gasPrice: await web3Instance.eth.getGasPrice(),
         gasLimit: web3Instance.utils.toHex(300000),
         data: contract.methods.registerUser(
           email, 
@@ -163,38 +109,21 @@ const RegisterUserMetaMask = () => {
         ).encodeABI()
       };
   
-      // 7. Send transaction
-      await logEvent('sending_transaction', metaMaskAccount, {
-        to: tx.to,
-        value: '0',
-        gasPrice: gasPrice.toString(),
-        gasLimit: tx.gasLimit
-      });
-      
+      console.log('8. Sending transaction...');
       const receipt = await web3Instance.eth.sendTransaction(tx);
       
-      // 8. Log successful transaction
-      await logEvent('transaction_successful', metaMaskAccount, {
-        transactionHash: receipt.transactionHash,
-        blockNumber: receipt.blockNumber,
-        gasUsed: receipt.gasUsed
-      });
+      console.log('9. Transaction receipt:', receipt);
   
-      // 9. Prepare user data (without private key for security)
+      // Store the private key securely (in a real app, use proper encryption)
+      // For demo purposes only - in production, use secure storage solutions
       const userData = {
         email,
         username,
         publicKey,
-        address: metaMaskAccount,
-        registeredAt: new Date().toISOString()
+        //privateKey, // In production, encrypt this before storing
+        address: metaMaskAccount
       };
-      
-      // 10. Log successful registration
-      await logEvent('registration_complete', metaMaskAccount, {
-        username,
-        email,
-        publicKey: publicKey.substring(0, 10) + '...' // Log partial key for reference
-      });
+      console.log('User data to be stored:', userData);
   
       // Reset form
       setEmail('');
@@ -202,31 +131,19 @@ const RegisterUserMetaMask = () => {
       setPublicKey('');
       setPrivateKey('');
   
-      setSuccess('Registration successful! Please keep your private key secure.');
-      
-      // Navigate to login after a short delay
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000);
-      
+      alert('Registration successful! Please keep your private key secure.');
     } catch (error) {
-      console.error('Registration failed:', error);
-      
-      // Log the error with detailed information
-      await logEvent('registration_failed', metaMaskAccount, {
-        error: error.message,
-        errorCode: error.code,
-        username,
-        email,
-        stack: error.stack?.substring(0, 500) // Log first 500 chars of stack trace
+      console.error('Registration failed - Full error:', {
+        error,
+        message: error.message,
+        stack: error.stack,
+        data: error.data
       });
-      
       setError(`Registration failed: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
-
   if (!contract) {
     return (
       <div>

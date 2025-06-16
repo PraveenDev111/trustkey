@@ -1,110 +1,114 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ethers } from 'ethers';
+import { useNavigate } from 'react-router-dom';
+import { saveAs } from 'file-saver';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FaCopy, FaDownload } from 'react-icons/fa';
 import '../styles/Dashboard.css';
+import { ADMIN_ADDRESS } from '../config';
 
 const Dashboard = () => {
-  const [dashboardData, setDashboardData] = useState(null);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingUsers, setLoadingUsers] = useState(false);
   const [error, setError] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [publicKey, setPublicKey] = useState('');
+  const [userDetails, setUserDetails] = useState({
+    username: '',
+    email: '',
+    address: ''
+  });
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
-
-  // Fetch dashboard data
+  
+  // Check if current user is admin and fetch user data
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
+        const userAddress = localStorage.getItem('userAddress');
+        if (!userAddress) {
           navigate('/');
           return;
         }
 
-        const response = await fetch('http://localhost:3001/api/auth/protected', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch dashboard data');
+        if (userAddress.toLowerCase() === ADMIN_ADDRESS.toLowerCase()) {
+          setIsAdmin(true);
         }
 
-        const data = await response.json();
-        setDashboardData(data);
-      } catch (err) {
-        console.error('Dashboard error:', err);
-        setError('Failed to load dashboard. Please try again.');
+        const token = localStorage.getItem('token');
+        
+        // Try to fetch user details from the backend
+        try {
+          const response = await fetch('http://localhost:3001/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.user) {
+              setUserDetails({
+                username: data.user.username || 'User',
+                email: data.user.email || 'Not provided',
+                address: data.user.address || userAddress
+              });
+              
+              if (data.user.publicKey) {
+                setPublicKey(data.user.publicKey);
+              } else {
+                // Fallback to mock public key if not provided
+                const mockPublicKey = `-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA${userAddress.replace('0x', '')}\n-----END PUBLIC KEY-----`;
+                setPublicKey(mockPublicKey);
+              }
+              return; // Exit early if successful
+            }
+          }
+        } catch (error) {
+          console.warn('Could not fetch user details:', error);
+          // Continue to fallback behavior
+        }
+        
+        // Fallback if the endpoint doesn't exist or fails
+        const username = localStorage.getItem('username') || 'User';
+        const email = localStorage.getItem('email') || 'Not provided';
+        
+        setUserDetails({
+          username,
+          email,
+          address: userAddress
+        });
+        
+        // Set a mock public key based on the address
+        const mockPublicKey = `-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA${userAddress.replace('0x', '')}\n-----END PUBLIC KEY-----`;
+        setPublicKey(mockPublicKey);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError('Failed to load user data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDashboardData();
+    fetchUserData();
   }, [navigate]);
 
-  // Fetch registered users
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoadingUsers(true);
-        const token = localStorage.getItem('token');
-        if (!token) return;
+  const handleCopyKey = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-        const response = await fetch('http://localhost:3001/api/auth/users', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+  const handleDownloadKey = () => {
+    const blob = new Blob([publicKey], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, 'public_key.pem');
+  };
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-
-        const data = await response.json();
-        if (data.success) {
-          setUsers(data.users || []);
-        }
-      } catch (err) {
-        console.error('Error fetching users:', err);
-        // Don't show error to user for this non-critical feature
-      } finally {
-        setLoadingUsers(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      // Call the logout API
-      const response = await fetch('http://localhost:3001/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
-      
-      // Clear local storage and redirect
-      localStorage.removeItem('token');
-      localStorage.removeItem('userAddress');
-      navigate('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-      // Still clear local storage and redirect even if the API call fails
-      localStorage.removeItem('token');
-      localStorage.removeItem('userAddress');
-      navigate('/');
-    }
+  const handleLogout = () => {
+    // Clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('userAddress');
+    
+    // Redirect to home page
+    navigate('/');
   };
 
   if (loading) {
@@ -119,96 +123,123 @@ const Dashboard = () => {
   if (error) {
     return (
       <div className="dashboard-error">
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Retry</button>
+        <div className="error-message">
+          <h3>Error Loading Dashboard</h3>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()} className="btn primary">
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
+
+  const userAddress = localStorage.getItem('userAddress') || '0x0...';
 
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <h1>TrustKey Dashboard</h1>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
+        <div className="header-actions">
+          {isAdmin && (
+            <button 
+              onClick={() => navigate('/admin')} 
+              className="admin-btn"
+              title="Admin Dashboard"
+            >
+              Admin
+            </button>
+          )}
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
+        </div>
       </header>
       
       <main className="dashboard-content">
-        {dashboardData && (
-          <>
-            <section className="welcome-section">
-              <h2>{dashboardData.message}</h2>
-              <p>Wallet: {dashboardData.user.address}</p>
-              <p>Member since: {new Date(dashboardData.user.registrationDate).toLocaleDateString()}</p>
-            </section>
-
-            <section className="stats-section">
-              <h3>Your Stats</h3>
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <span className="stat-value">{dashboardData.dashboardData.stats.documentsSigned}</span>
-                  <span className="stat-label">Documents Signed</span>
+        <div className="dashboard-grid">
+          {/* User Profile Card */}
+          <div className="card user-card user-details">
+              <div className="profile-header">
+                <div className="user-avatar">
+                  {userDetails.username ? userDetails.username.substring(0, 2).toUpperCase() : 'US'}
                 </div>
-                <div className="stat-card">
-                  <span className="stat-value">{dashboardData.dashboardData.stats.keysManaged}</span>
-                  <span className="stat-label">Keys Managed</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-value">{users.length}</span>
-                  <span className="stat-label">Total Users</span>
-                </div>
+                <h3 style={{ margin: 0, color: '#1e293b' }}>Profile Information</h3>
               </div>
-            </section>
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <td className="value">{userDetails.username || 'Not set'}</td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td className="value">{userDetails.email || 'Not provided'}</td>
+                  </tr>
+                  <tr>
+                    <th>Wallet Address</th>
+                    <td className="value">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span>{userDetails.address || 'Not available'}</span>
+                        <CopyToClipboard text={userDetails.address} onCopy={handleCopyKey}>
+                          <button className="icon-btn" style={{ padding: '0.25rem' }} title="Copy Address">
+                            <FaCopy size={14} />
+                          </button>
+                        </CopyToClipboard>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            
+          </div>
+          {/* Public Key Card */}
+          <div className="card public-key-card">
+            <div className="card-header">
+              <h3>Your Public Key</h3>
+              <button 
+                onClick={handleDownloadKey}
+                className="download-btn"
+                title="Download Public Key"
+              >
+                <FaDownload /> Download
+              </button>
+            </div>
+            
+            <div className="public-key-container">
+              <pre className="public-key">
+                {publicKey || 'No public key found'}
+              </pre>
+              <CopyToClipboard text={publicKey} onCopy={handleCopyKey}>
+                <button className="copy-btn">
+                  <FaCopy /> {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </CopyToClipboard>
+            </div>
+            
+            <div className="key-actions">
+              <button className="btn primary">Generate New Key Pair</button>
+              <button className="btn secondary">Import Existing Key</button>
+            </div>
+          </div>
 
-            {/* Registered Users Section */}
-            <section className="users-section">
-              <div className="section-header">
-                <h3>Registered Users</h3>
-                <span className="total-count">{users.length} users</span>
-              </div>
-              
-              {loadingUsers ? (
-                <div className="loading-users">
-                  <div className="spinner small"></div>
-                  <p>Loading users...</p>
-                </div>
-              ) : users.length > 0 ? (
-                <div className="users-grid">
-                  {users.map((user, index) => (
-                    <div key={index} className="user-card">
-                      <div className="user-avatar">
-                        {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                      </div>
-                      <div className="user-details">
-                        <div className="user-name">
-                          {user.username || 'Unnamed User'}
-                        </div>
-                        <div className="user-address">
-                          {`${user.address.substring(0, 6)}...${user.address.substring(user.address.length - 4)}`}
-                        </div>
-                        <div className="user-email" title={user.email}>
-                          {user.email || 'No email provided'}
-                        </div>
-                      </div>
-                      <div className="user-actions">
-                        <Link 
-                          to={`/users/${user.address}`} 
-                          className="btn btn-sm btn-outline"
-                        >
-                          View
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="no-users">
-                  <p>No registered users found.</p>
-                </div>
-              )}
-            </section>
-          </>
-        )}
+          {/* Quick Actions */}
+          <div className="card quick-actions">
+            <h3>Quick Actions</h3>
+            <div className="action-buttons">
+              <button className="btn primary">Sign Document</button>
+              <button className="btn secondary">Verify Signature</button>
+              <button className="btn">View Activity Log</button>
+            </div>
+          </div>
+        </div>
+
       </main>
+      
+      {/* Copy Success Notification */}
+      {copied && (
+        <div className="copy-notification">
+          Copied to clipboard!
+        </div>
+      )}
     </div>
   );
 };
