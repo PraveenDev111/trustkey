@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { FaBars, FaCog, FaSignOutAlt, FaUserShield, FaTachometerAlt, FaVial } from 'react-icons/fa';
+import logo from '../assets/trustkey1.png';
 import { useNavigate } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -17,6 +19,8 @@ const Dashboard = () => {
     address: ''
   });
   const [copied, setCopied] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   
   // Check if current user is admin and fetch user data
@@ -137,25 +141,59 @@ const Dashboard = () => {
   const userAddress = localStorage.getItem('userAddress') || '0x0...';
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>TrustKey Dashboard</h1>
-        <div className="header-actions">
-          {isAdmin && (
-            <button 
-              onClick={() => navigate('/admin')} 
-              className="admin-btn"
-              title="Admin Dashboard"
-            >
-              Admin
-            </button>
-          )}
-          <button onClick={handleLogout} className="logout-btn">Logout</button>
-        </div>
-      </header>
-      
-      <main className="dashboard-content">
-        <div className="dashboard-grid">
+    <div className={`dashboard-layout${sidebarOpen ? ' sidebar-open' : ''}`}
+  style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
+      {/* Sidebar - only render if open */}
+      {sidebarOpen && (
+        <>
+          <aside className="dashboard-sidebar visible" aria-label="Sidebar Navigation">
+            <div className="sidebar-header">
+              <img src={logo} alt="TrustKey Logo" className="sidebar-logo" />
+              <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
+                ×
+              </button>
+            </div>
+            <nav className="sidebar-nav">
+              <ul>
+                <li className="active">
+                  <a href="#" onClick={() => setSidebarOpen(false)} aria-current="page"><FaTachometerAlt /><span>Overview</span></a>
+                </li>
+                <li>
+                  <a href="#" onClick={() => setSidebarOpen(false)}><FaVial /><span>Test</span></a>
+                </li>
+              </ul>
+            </nav>
+          </aside>
+          <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-label="Sidebar overlay"></div>
+        </>
+      )}
+      {/* Main Content */}
+      <div className="main-content-wrapper" style={{ width: sidebarOpen ? 'calc(100vw - 250px)' : '100vw' }}>
+        <header className="dashboard-header">
+          <button className="sidebar-toggle" onClick={() => setSidebarOpen(prev => !prev)}><FaBars /></button>
+          <h1 className="dashboard-title">TrustKey Dashboard</h1>
+          <div className="header-actions">
+            <div className="settings-menu">
+              <button onClick={() => setSettingsOpen(!settingsOpen)} className="settings-btn" title="Settings">
+                <FaCog />
+              </button>
+              {settingsOpen && (
+                <div className="settings-dropdown">
+                  {isAdmin && (
+                    <button onClick={() => { navigate('/admin'); setSettingsOpen(false); }} className="dropdown-item">
+                    Admin
+                    </button>
+                  )}
+                  <button onClick={() => { handleLogout(); setSettingsOpen(false); }} className="dropdown-item">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+        <main className="dashboard-content">
+          <div className="dashboard-grid">
           {/* User Profile Card */}
           <div className="card user-card user-details">
               <div className="profile-header">
@@ -241,6 +279,8 @@ const Dashboard = () => {
         </div>
       )}
     </div>
+    {/* Close main-content-wrapper */}
+  </div>
   );
 };
 
