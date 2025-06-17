@@ -175,3 +175,23 @@
   signatureVerification: 4 calls, avg 27.37ms
   jwtIssuance: 4 calls, avg 14.64ms
 
+{"timestamp":"2025-06-17 15:58:50","operation":"nonceGeneration","durationMs":244.57,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-17 15:58:54","operation":"verifyMessage","durationMs":21.74}
+{"timestamp":"2025-06-17 15:58:54","operation":"sign","durationMs":2.27}
+{"timestamp":"2025-06-17 15:58:54","operation":"signatureVerification","durationMs":45.08,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":21.7359,"tokenGenerationTimeMs":2.2703}}
+{"timestamp":"2025-06-17 15:58:54","operation":"jwtIssuance","durationMs":18.74,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":21.7359,"tokenGenerationTimeMs":2.2703}}
+[2025-06-17 15:59:37] Performance Metrics:
+  nonceGeneration: 1 calls, avg 244.57ms
+  signatureVerification: 2 calls, avg 33.41ms
+  jwtIssuance: 2 calls, avg 10.51ms
+
+{"timestamp":"2025-06-17 16:19:48","operation":"nonceGeneration","durationMs":59.57,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-17 16:19:51","operation":"verifyMessage","durationMs":15.7}
+{"timestamp":"2025-06-17 16:19:51","operation":"sign","durationMs":7.05}
+{"timestamp":"2025-06-17 16:19:51","operation":"signatureVerification","durationMs":35.9,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":15.6998,"tokenGenerationTimeMs":7.0532}}
+{"timestamp":"2025-06-17 16:19:51","operation":"jwtIssuance","durationMs":24.99,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":15.6998,"tokenGenerationTimeMs":7.0532}}
+[2025-06-17 16:24:37] Performance Metrics:
+  nonceGeneration: 1 calls, avg 59.57ms
+  signatureVerification: 2 calls, avg 25.80ms
+  jwtIssuance: 2 calls, avg 16.02ms
+

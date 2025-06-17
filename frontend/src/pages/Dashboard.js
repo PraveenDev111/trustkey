@@ -168,7 +168,7 @@ const Dashboard = () => {
         </>
       )}
       {/* Main Content */}
-      <div className="main-content-wrapper" style={{ width: sidebarOpen ? 'calc(100vw - 250px)' : '100vw' }}>
+      <div className="main-content-wrapper" >
         <header className="dashboard-header">
           <button className="sidebar-toggle" onClick={() => setSidebarOpen(prev => !prev)}><FaBars /></button>
           <h1 className="dashboard-title">TrustKey Dashboard</h1>
@@ -235,7 +235,7 @@ const Dashboard = () => {
               <h3>Your Public Key</h3>
               <button 
                 onClick={handleDownloadKey}
-                className="download-btn"
+                className="btn download-btn"
                 title="Download Public Key"
               >
                 <FaDownload /> Download
