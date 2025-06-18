@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getNonce, verifySignature, getProtectedData, getAllUsers, logout, getUserDetails } = require('../controllers/authController');
+const { getNonce, verifySignature, getProtectedData, getAllUsers, logout, getUserDetails, getUserByAddress } = require('../controllers/authController');
 const authMiddleware = require('../middleware/auth');
 
 // @route   GET api/auth/nonce/:address
@@ -32,5 +32,10 @@ router.get('/me', authMiddleware, getUserDetails);
 // @desc    Logout user and clear token
 // @access  Private
 router.post('/logout', authMiddleware, logout);
+
+// @route   GET api/auth/user/:address
+// @desc    Get user details by address (admin only)
+// @access  Public
+router.get('/user/:address', getUserByAddress);
 
 module.exports = router;

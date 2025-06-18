@@ -2,11 +2,10 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import RegisterUserMetaMask from './pages/RegisterUserMetaMask';
-import UserList from './pages/userlist';
+import ContractUserList from './pages/ContractUserList';
 
 // A wrapper component that will check for authentication
 const ProtectedRoute = ({ children }) => {
@@ -43,7 +42,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
         <Route 
           path="/dashboard" 
           element={
@@ -61,7 +59,10 @@ function App() {
           } 
         />
         <Route path="/register" element={<RegisterUserMetaMask />} />
-        <Route path="/users" element={<UserList />} />
+        <Route 
+          path="/contract-users" 
+          element={<ContractUserList /> } 
+        />
       </Routes>
     </Router>
   );

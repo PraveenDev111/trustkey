@@ -44,7 +44,7 @@ const RegisterUserMetaMask = () => {
     try {
       // Generate random private key
       const privateKeyHex = web3Instance.utils.randomHex(32);
-       
+      
       // Generate public key from private key
       const ec = new EC('secp256k1');
       const keyPair = ec.keyFromPrivate(privateKeyHex.replace('0x', ''), 'hex');
@@ -108,58 +108,11 @@ const RegisterUserMetaMask = () => {
           publicKeyBytes
         ).encodeABI()
       };
-      try {
-        console.log('8. Sending transaction...');
-        // First, estimate gas
-        const gasEstimate = await contract.methods.registerUser(
-          email, 
-          username, 
-          publicKeyBytes
-        ).estimateGas({ from: metaMaskAccount });
-        
-        console.log('Estimated gas:', gasEstimate);
-        
-        // Add 20% buffer to the gas estimate using web3 utils
-        const gasWithBuffer = Math.floor(Number(gasEstimate) * 1.2);
-        const gasLimitHex = web3Instance.utils.toHex(gasWithBuffer);
-        
-        // Get current gas price
-        const gasPrice = await web3Instance.eth.getGasPrice();
-        console.log('Current gas price:', gasPrice);
-        
-        // Update transaction with proper hex values
-        const tx = {
-          from: metaMaskAccount,
-          to: CONTRACT_ADDRESS,
-          nonce: web3Instance.utils.toHex(nonce),
-          gasPrice: gasPrice,
-          gasLimit: gasLimitHex,
-          data: contract.methods.registerUser(
-            email, 
-            username, 
-            publicKeyBytes
-          ).encodeABI()
-        };
-        
-        console.log('Transaction details:', {
-          ...tx,
-          gasLimit: gasLimitHex,
-          gasPrice: gasPrice.toString()
-        });
-        
-        // Send the transaction
-        const receipt = await web3Instance.eth.sendTransaction(tx);
-        console.log('9. Transaction receipt:', receipt);
-      } catch (error) {
-        console.error('Transaction error:', error);
-        if (error.message.includes('revert')) {
-          console.error('Transaction reverted. Check if:');
-          console.error('1. Contract is paused');
-          console.error('2. You have the required permissions');
-          console.error('3. Input parameters are correct');
-        }
-        throw error;
-      }
+  
+      console.log('8. Sending transaction...');
+      const receipt = await web3Instance.eth.sendTransaction(tx);
+      
+      console.log('9. Transaction receipt:', receipt);
   
       // Store the private key securely (in a real app, use proper encryption)
       // For demo purposes only - in production, use secure storage solutions

@@ -1,6 +1,6 @@
 const { logAuthAttempt } = require('../utils/logger');
 
-const ADMIN_ADDRESS = '0x77c7710051E3e9E135a98525fF496F9cfEc45fc6';
+const ADMIN_ADDRESS = '0xc7Cd28aD6f9555f0219626074F6C07626B91d393';
 
 const isAdmin = (req, res, next) => {
   try {

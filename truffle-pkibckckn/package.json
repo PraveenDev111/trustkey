@@ -4,6 +4,7 @@
     "web3": "^4.16.0"
   },
   "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.16",
     "react-app-rewired": "^2.2.1"
   }
 }

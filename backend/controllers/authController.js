@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { ethers } = require('ethers');
-const { logAuthAttempt, trackPerformance, logPerformance } = require('../utils/logger');
-const { userAuthContract } = require('../utils/web3');
+const { logAuthAttempt, trackPerformance } = require('../utils/logger');
+const { userCertificateManagerContract } = require('../utils/web3');
 
 // In-memory store for nonces. In production, use a more robust store like Redis.
 const nonceStore = new Map();
@@ -14,14 +14,16 @@ const getNonce = async (req, res) => {
     const lowerCaseAddress = address.toLowerCase();
 
     // 1. Check if the user is registered in the smart contract
-    const isRegistered = await userAuthContract.isUserRegistered(address);
-    if (!isRegistered) {
+    try {
+      // Try to get user details - will throw if not registered
+      await userCertificateManagerContract.getUserDetails(address);
+    } catch (error) {
       const logData = {
         type: 'login',
         address,
         status: 'failure',
         ip: req.ip,
-        metadata: { reason: 'unregistered_user' }
+        metadata: { reason: 'unregistered_user', error: error.message }
       };
       logAuthAttempt(logData);
       endOperation({ status: 'failure', ...logData });
@@ -52,7 +54,6 @@ const getNonce = async (req, res) => {
 // @desc    Verify a signature and issue a JWT
 const verifySignature = async (req, res) => {
   const endOperation = trackPerformance('signatureVerification');
-  const endJwtOperation = trackPerformance('jwtIssuance');
   
   try {
     const { address, signature } = req.body;
@@ -72,14 +73,26 @@ const verifySignature = async (req, res) => {
       return res.status(400).json({ error: 'Nonce not found or has expired. Please try again.' });
     }
 
-    // Recover the address from the signature and the original message (nonce)
-    const endSigVerification = trackPerformance('signatureVerification');
-    const signerAddr = ethers.verifyMessage(nonce, signature);
-    const sigDuration = endSigVerification({ operation: 'verifyMessage' });
+    // 1. Recover the signer address from the signature
+    let signerAddress;
+    try {
+      signerAddress = ethers.verifyMessage(nonce, signature);
+    } catch (error) {
+      logAuthAttempt({
+        type: 'login',
+        address,
+        status: 'failure',
+        ip: req.ip,
+        metadata: { reason: 'invalid_signature', error: error.message }
+      });
+      endOperation({ status: 'failure', type: 'login', address, ip: req.ip, reason: 'invalid_signature' });
+      return res.status(401).json({ error: 'Invalid signature format.' });
+    }
 
-    // Check if the recovered address matches the provided address
-    if (signerAddr.toLowerCase() !== lowerCaseAddress) {
-      const logData = {
+    const lowerCaseSigner = signerAddress.toLowerCase();
+
+    if (lowerCaseSigner !== lowerCaseAddress) {
+      logAuthAttempt({
         type: 'login',
         address,
         status: 'failure',
@@ -87,13 +100,19 @@ const verifySignature = async (req, res) => {
         metadata: { 
           reason: 'signature_mismatch',
           expected: lowerCaseAddress,
-          received: signerAddr.toLowerCase(),
-          verificationTimeMs: sigDuration
+          received: lowerCaseSigner 
         }
-      };
-      logAuthAttempt(logData);
-      endOperation({ status: 'failure', ...logData });
-      return res.status(401).json({ error: 'Invalid signature. Verification failed.' });
+      });
+      endOperation({ 
+        status: 'failure', 
+        type: 'login', 
+        address, 
+        ip: req.ip, 
+        reason: 'signature_mismatch' 
+      });
+      return res.status(401).json({ 
+        error: 'Signature does not match the provided address.' 
+      });
     }
 
     // Signature is valid, create JWT token
@@ -116,7 +135,7 @@ const verifySignature = async (req, res) => {
       ip: req.ip,
       metadata: { 
         tokenExpiresIn: '1h',
-        verificationTimeMs: sigDuration,
+        verificationTimeMs: 0,
         tokenGenerationTimeMs: tokenDuration
       }
     };
@@ -130,40 +149,63 @@ const verifySignature = async (req, res) => {
   } catch (error) {
     console.error('Error during signature verification:', error);
     endOperation({ status: 'error', error: error.message });
-    endJwtOperation({ status: 'error', error: error.message });
     res.status(500).json({ error: 'An error occurred during signature verification.' });
   }
 };
 
-// @desc    Get protected data for an authenticated user
 // @desc    Get all registered users
+// @access  Private
 const getAllUsers = async (req, res) => {
   try {
-    // Get user count first
-    const userCount = await userAuthContract.getUserCount();
+    // Try to get all users at once first
+    let userAddresses = [];
     
-    // Fetch each user's address
-    const users = [];
-    for (let i = 0; i < userCount; i++) {
-      try {
-        const userAddress = await userAuthContract.getUserByIndex(i);
-        const [username, email, publicKey] = await userAuthContract.getUserDetails(userAddress);
-        users.push({
-          address: userAddress,
-          username,
-          email,
-          publicKey: publicKey.toString('hex').substring(0, 20) + '...' // Just show part of the public key
-        });
-      } catch (err) {
-        console.error(`Error fetching user at index ${i}:`, err);
-        // Continue with next user even if one fails
+    try {
+      userAddresses = await userCertificateManagerContract.getAllUsers();
+    } catch (error) {
+      console.log('getAllUsers() not available, falling back to index-based fetching');
+      // Fallback to index-based fetching if getAllUsers fails
+      const userCount = await userCertificateManagerContract.getUserCount();
+      for (let i = 0; i < userCount; i++) {
+        const address = await userCertificateManagerContract.getUserByIndex(i);
+        if (address && address !== '0x0000000000000000000000000000000000000000') {
+          userAddresses.push(address);
+        }
       }
     }
-    
-    res.json({ success: true, users });
+
+    // Get details for each user
+    const users = await Promise.all(
+      userAddresses.map(async (userAddress) => {
+        try {
+          const [username, email, publicKey] = await userCertificateManagerContract.getUserDetails(userAddress);
+          return {
+            address: userAddress,
+            username: username || 'Unknown',
+            email: email || 'N/A',
+            publicKey: publicKey || 'N/A',
+            isRegistered: true
+          };
+        } catch (error) {
+          console.error(`Error fetching details for ${userAddress}:`, error);
+          return {
+            address: userAddress,
+            username: 'Error',
+            email: 'Error fetching details',
+            publicKey: 'N/A',
+            isRegistered: false
+          };
+        }
+      })
+    );
+
+    res.json(users);
   } catch (error) {
-    console.error('Error in getAllUsers:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch users' });
+    console.error('Error fetching users:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch users',
+      details: error.message 
+    });
   }
 };
 
@@ -174,23 +216,86 @@ const getUserDetails = async (req, res) => {
     const userAddress = req.user.address; // From JWT token
     
     // Get user details from the smart contract
-    const [username, email, publicKey] = await userAuthContract.getUserDetails(userAddress);
+    const [username, email, publicKey] = await userCertificateManagerContract.getUserDetails(userAddress);
     
     res.json({
       success: true,
       user: {
         address: userAddress,
-        username,
-        email,
-        publicKey: publicKey ? publicKey.toString('hex') : null
+        username: username || 'Unknown',
+        email: email || 'N/A',
+        publicKey: publicKey || 'N/A',
+        isRegistered: true
       }
     });
   } catch (error) {
     console.error('Error fetching user details:', error);
-    if (error.message.includes('User not found')) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+    if (error.message.includes('User not found') || error.message.includes('user does not exist')) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'User not found',
+        details: error.message 
+      });
     }
-    res.status(500).json({ success: false, error: 'Failed to fetch user details' });
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch user details',
+      details: error.message 
+    });
+  }
+};
+
+// @desc    Get user details by Ethereum address
+// @access  Public
+const getUserByAddress = async (req, res) => {
+  try {
+    const { address } = req.params;
+    
+    // Basic address validation
+    if (typeof address !== 'string' || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+      console.log('Invalid address format:', address);
+      return res.status(400).json({ success: false, error: 'Invalid Ethereum address format' });
+    }
+    
+    const normalizedAddress = address.toLowerCase();
+    console.log('Fetching user details for:', normalizedAddress);
+    
+    // Get user details from the smart contract
+    const [username, email, publicKey] = await userCertificateManagerContract.getUserDetails(normalizedAddress);
+    
+    console.log('User details fetched:', { 
+      username: username || 'Not provided', 
+      email: email || 'Not provided',
+      hasPublicKey: !!publicKey 
+    });
+    
+    res.json({
+      success: true,
+      user: {
+        address: normalizedAddress,
+        username: username || 'Unknown',
+        email: email || 'N/A',
+        publicKey: publicKey || 'N/A',
+        isRegistered: true
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error in getUserByAddress:', error);
+    if (error.message.includes('User not found') || 
+        error.message.includes('user does not exist') ||
+        error.message.includes('invalid address')) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'User not found',
+        details: error.message 
+      });
+    }
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch user details',
+      details: error.message 
+    });
   }
 };
 
@@ -200,64 +305,45 @@ const getProtectedData = async (req, res) => {
     // The authMiddleware has already verified the token and attached the user to the request
     const userAddress = req.user.address;
     
-    // Here you could fetch additional user data from your smart contract
-    // For example: const userData = await userAuthContract.getUserDetails(userAddress);
+    // Get user details from the smart contract
+    const [username, email, publicKey] = await userCertificateManagerContract.getUserDetails(userAddress);
     
     res.json({
       success: true,
-      message: 'Welcome to your TrustKey Dashboard!',
-      user: {
-        address: userAddress,
-        // Add any additional user data from your smart contract here
-        registrationDate: new Date().toISOString(),
-        // userLevel, subscriptionStatus, etc.
-      },
-      dashboardData: {
-        // Add any dashboard-specific data here
-        recentActivity: [],
-        stats: {
-          // Example stats
-          documentsSigned: 0,
-          keysManaged: 0
+      data: {
+        message: 'This is protected data',
+        user: {
+          address: userAddress,
+          username: username || 'Unknown',
+          email: email || 'N/A',
+          publicKey: publicKey || 'N/A'
         }
       }
     });
   } catch (error) {
     console.error('Error fetching protected data:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to load dashboard data' 
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch protected data',
+      details: error.message
     });
   }
 };
 
 // @desc    Logout a user
 // @access  Private
-const logout = async (req, res) => {
-  try {
-    const { address } = req.user; // Get address from authenticated user
-    
-    // Log the logout action
-    logAuthAttempt({
-      type: 'logout',
-      address,
-      status: 'success',
-      ip: req.ip,
-      metadata: { action: 'user_logged_out' }
-    });
-    
-    res.json({ success: true, message: 'Logged out successfully' });
-  } catch (error) {
-    console.error('Logout error:', error);
-    res.status(500).json({ success: false, error: 'Logout failed' });
-  }
+const logout = (req, res) => {
+  // In a stateless JWT system, the client should delete the token
+  // This endpoint is a placeholder for any server-side cleanup if needed
+  res.json({ success: true, message: 'Logout successful' });
 };
 
-module.exports = { 
-  getNonce, 
-  verifySignature, 
-  getProtectedData, 
-  getAllUsers, 
-  logout, 
-  getUserDetails 
+module.exports = {
+  getNonce,
+  verifySignature,
+  getAllUsers,
+  getUserDetails,
+  getUserByAddress,
+  getProtectedData,
+  logout
 };

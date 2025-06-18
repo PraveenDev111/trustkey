@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { JsonRpcProvider, Contract } = require('ethers');
 const UserAuthABI = require('../../truffle-pkibckckn/build/contracts/UserAuth.json').abi;
+const UserCertificateManagerABI = require('../../truffle-pkibckckn/build/contracts/UserCertificateManager.json').abi;
 
 const { RPC_URL, CONTRACT_ADDRESS } = process.env;
 
@@ -12,6 +13,6 @@ if (!RPC_URL || !CONTRACT_ADDRESS) {
 
 
 const provider = new JsonRpcProvider(RPC_URL);
-const userAuthContract = new Contract(CONTRACT_ADDRESS, UserAuthABI, provider);
-
-module.exports = { userAuthContract };
+//const userAuthContract = new Contract(CONTRACT_ADDRESS, UserAuthABI, provider);
+const userCertificateManagerContract = new Contract(CONTRACT_ADDRESS, UserCertificateManagerABI, provider);
+module.exports = { userCertificateManagerContract };

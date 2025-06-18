@@ -257,4 +257,40 @@ contract UserCertificateManager {
         
         if (v < 27) v += 27;
     }
+
+
+
+    // Get user details (from UserAuth)
+    function getUserDetails(address user) public view returns (string memory, string memory, bytes memory) {
+        require(users[user].exists, "User not registered");
+        return (users[user].username, users[user].email, users[user].publicKey);
+    }
+
+    // Check if user exists (from UserAuth)
+    function isUserRegistered(address user) public view returns (bool) {
+        return users[user].exists;
+    }
+
+    // Get total number of registered users (from UserAuth)
+    function getUserCount() public view returns (uint) {
+        return registeredUsers.length;
+    }
+
+    // Get user address by index (from UserAuth)
+    function getUserByIndex(uint index) public view returns (address) {
+        require(index < registeredUsers.length, "Index out of bounds");
+        return registeredUsers[index];
+    }
+
+    // Get all registered users (from UserAuth)
+    function getAllUsers() public view returns (address[] memory) {
+        return registeredUsers;
+    }
+
+    // Verify solution (from UserAuth)
+    function verifySolution(address user, bytes memory solution) public view returns (bool) {
+        require(users[user].exists, "User not registered");
+        bytes memory challenge = generateChallenge(user);
+        return keccak256(solution) == keccak256(challenge);
+    }
 }

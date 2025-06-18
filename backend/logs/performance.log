@@ -220,3 +220,82 @@
   signatureVerification: 2 calls, avg 139.77ms
   jwtIssuance: 2 calls, avg 8.19ms
 
+{"timestamp":"2025-06-18 12:04:18","operation":"nonceGeneration","durationMs":99.46,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+[2025-06-18 12:05:02] Performance Metrics:
+  nonceGeneration: 1 calls, avg 99.46ms
+
+{"timestamp":"2025-06-18 12:05:19","operation":"nonceGeneration","durationMs":68.77,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-18 12:05:26","operation":"verifyMessage","durationMs":59.94}
+{"timestamp":"2025-06-18 12:05:26","operation":"sign","durationMs":19.59}
+{"timestamp":"2025-06-18 12:05:26","operation":"signatureVerification","durationMs":111.53,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":59.9431,"tokenGenerationTimeMs":19.5865}}
+{"timestamp":"2025-06-18 12:05:26","operation":"jwtIssuance","durationMs":64.07,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":59.9431,"tokenGenerationTimeMs":19.5865}}
+{"timestamp":"2025-06-18 12:06:00","operation":"nonceGeneration","durationMs":31.38,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-18 12:06:05","operation":"verifyMessage","durationMs":15.85}
+{"timestamp":"2025-06-18 12:06:05","operation":"sign","durationMs":4.05}
+{"timestamp":"2025-06-18 12:06:05","operation":"signatureVerification","durationMs":47.6,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":15.847,"tokenGenerationTimeMs":4.0504}}
+{"timestamp":"2025-06-18 12:06:05","operation":"jwtIssuance","durationMs":29.62,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":15.847,"tokenGenerationTimeMs":4.0504}}
+[2025-06-18 12:10:02] Performance Metrics:
+  nonceGeneration: 2 calls, avg 50.08ms
+  signatureVerification: 4 calls, avg 58.73ms
+  jwtIssuance: 4 calls, avg 29.33ms
+
+{"timestamp":"2025-06-18 12:15:19","operation":"nonceGeneration","durationMs":29.82,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-18 12:19:03","operation":"nonceGeneration","durationMs":46.08,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-18 12:19:09","operation":"verifyMessage","durationMs":14.65}
+{"timestamp":"2025-06-18 12:19:09","operation":"sign","durationMs":2.05}
+{"timestamp":"2025-06-18 12:19:09","operation":"signatureVerification","durationMs":33.79,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":14.65,"tokenGenerationTimeMs":2.0479}}
+{"timestamp":"2025-06-18 12:19:09","operation":"jwtIssuance","durationMs":27.05,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":14.65,"tokenGenerationTimeMs":2.0479}}
+[2025-06-18 12:20:02] Performance Metrics:
+  nonceGeneration: 2 calls, avg 37.95ms
+  signatureVerification: 2 calls, avg 24.22ms
+  jwtIssuance: 2 calls, avg 14.55ms
+
+{"timestamp":"2025-06-18 16:17:11","operation":"nonceGeneration","durationMs":215.78,"status":"failure","type":"login","address":"0xad396682914ac8854aa5d8ee6449f8a54f248621","ip":"::1","metadata":{"reason":"unregistered_user"}}
+{"timestamp":"2025-06-18 16:17:13","operation":"nonceGeneration","durationMs":36.32,"status":"failure","type":"login","address":"0xad396682914ac8854aa5d8ee6449f8a54f248621","ip":"::1","metadata":{"reason":"unregistered_user"}}
+{"timestamp":"2025-06-18 16:17:14","operation":"nonceGeneration","durationMs":34.99,"status":"failure","type":"login","address":"0xad396682914ac8854aa5d8ee6449f8a54f248621","ip":"::1","metadata":{"reason":"unregistered_user"}}
+{"timestamp":"2025-06-18 16:17:35","operation":"nonceGeneration","durationMs":65.56,"status":"success","type":"nonce_issued","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1"}
+{"timestamp":"2025-06-18 16:17:41","operation":"verifyMessage","durationMs":331.24}
+{"timestamp":"2025-06-18 16:17:42","operation":"sign","durationMs":19.47}
+{"timestamp":"2025-06-18 16:17:42","operation":"signatureVerification","durationMs":412.82,"status":"success","type":"login","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":331.237,"tokenGenerationTimeMs":19.4699}}
+{"timestamp":"2025-06-18 16:17:42","operation":"jwtIssuance","durationMs":51.09,"status":"success","type":"login","address":"0x60c15117eae2441cf62876baadb40ba5fed7912e","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":331.237,"tokenGenerationTimeMs":19.4699}}
+{"timestamp":"2025-06-18 16:17:58","operation":"nonceGeneration","durationMs":42.3,"status":"failure","type":"login","address":"0xad396682914ac8854aa5d8ee6449f8a54f248621","ip":"::1","metadata":{"reason":"unregistered_user"}}
+[2025-06-18 16:18:24] Performance Metrics:
+  nonceGeneration: 5 calls, avg 78.99ms
+  signatureVerification: 2 calls, avg 372.03ms
+  jwtIssuance: 2 calls, avg 35.28ms
+
+{"timestamp":"2025-06-18 16:20:37","operation":"nonceGeneration","durationMs":56.63,"status":"failure","type":"login","address":"0xad396682914ac8854aa5d8ee6449f8a54f248621","ip":"::1","metadata":{"reason":"unregistered_user"}}
+[2025-06-18 16:23:24] Performance Metrics:
+  nonceGeneration: 1 calls, avg 56.63ms
+
+{"timestamp":"2025-06-18 16:32:58","operation":"nonceGeneration","durationMs":49.97,"status":"success","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1"}
+{"timestamp":"2025-06-18 16:33:02","operation":"verifyMessage","durationMs":16.83}
+{"timestamp":"2025-06-18 16:33:02","operation":"sign","durationMs":5.87}
+{"timestamp":"2025-06-18 16:33:02","operation":"signatureVerification","durationMs":35.74,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":16.8306,"tokenGenerationTimeMs":5.8726}}
+{"timestamp":"2025-06-18 16:33:02","operation":"jwtIssuance","durationMs":24.52,"status":"success","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":16.8306,"tokenGenerationTimeMs":5.8726}}
+[2025-06-18 16:33:24] Performance Metrics:
+  nonceGeneration: 1 calls, avg 49.97ms
+  signatureVerification: 2 calls, avg 26.28ms
+  jwtIssuance: 2 calls, avg 15.19ms
+
+{"timestamp":"2025-06-18 17:45:28","operation":"nonceGeneration","durationMs":153.83,"status":"error","error":"could not decode result data (value=\"0x\", info={ \"method\": \"isUserRegistered\", \"signature\": \"isUserRegistered(address)\" }, code=BAD_DATA, version=6.14.3)"}
+{"timestamp":"2025-06-18 17:46:39","operation":"nonceGeneration","durationMs":215.66,"status":"failure","type":"login","address":"0xb4fecc564783dbd4a7fcc2293455a2cec7b5d8b3","ip":"::1","metadata":{"reason":"unregistered_user"}}
+[2025-06-18 20:51:02] Performance Metrics:
+  nonceGeneration: 1 calls, avg 215.66ms
+
+{"timestamp":"2025-06-18 21:21:14","operation":"nonceGeneration","durationMs":161.7,"status":"failure","type":"login","address":"0xb4fecc564783dbd4a7fcc2293455a2cec7b5d8b3","ip":"::1","metadata":{"reason":"unregistered_user"}}
+[2025-06-18 21:23:07] Performance Metrics:
+  nonceGeneration: 1 calls, avg 161.70ms
+
+{"timestamp":"2025-06-18 22:15:22","operation":"nonceGeneration","durationMs":105.14,"status":"error","error":"could not decode result data (value=\"0x\", info={ \"method\": \"isUserRegistered\", \"signature\": \"isUserRegistered(address)\" }, code=BAD_DATA, version=6.14.3)"}
+[2025-06-18 22:16:01] Performance Metrics:
+  nonceGeneration: 1 calls, avg 105.14ms
+
+{"timestamp":"2025-06-18 22:57:23","operation":"nonceGeneration","durationMs":199.22,"status":"success","type":"nonce_issued","address":"0xd94cc4f23112dd821b254eaa842a9a642817dc0f","ip":"::1"}
+{"timestamp":"2025-06-18 22:57:30","operation":"sign","durationMs":4.27}
+{"timestamp":"2025-06-18 22:57:30","operation":"signatureVerification","durationMs":196.03,"status":"success","type":"login","address":"0xd94cc4f23112dd821b254eaa842a9a642817dc0f","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.2689}}
+{"timestamp":"2025-06-18 22:57:30","operation":"jwtIssuance","durationMs":18.21,"status":"success","type":"login","address":"0xd94cc4f23112dd821b254eaa842a9a642817dc0f","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.2689}}
+{"timestamp":"2025-06-18 22:58:20","operation":"nonceGeneration","durationMs":85.68,"status":"success","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","ip":"::1"}
+{"timestamp":"2025-06-18 22:58:26","operation":"sign","durationMs":3.31}
+{"timestamp":"2025-06-18 22:58:26","operation":"signatureVerification","durationMs":100.98,"status":"success","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.3073}}
+{"timestamp":"2025-06-18 22:58:26","operation":"jwtIssuance","durationMs":68.11,"status":"success","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.3073}}
