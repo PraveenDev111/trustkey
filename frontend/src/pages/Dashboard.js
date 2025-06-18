@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaBars, FaCog, FaSignOutAlt, FaUserShield, FaTachometerAlt, FaVial } from 'react-icons/fa';
+import { FaBars, FaCog, FaTachometerAlt, FaVial } from 'react-icons/fa';
 import logo from '../assets/trustkey1.png';
 import { useNavigate } from 'react-router-dom';
 import { saveAs } from 'file-saver';
@@ -138,7 +138,7 @@ const Dashboard = () => {
     );
   }
 
-  const userAddress = localStorage.getItem('userAddress') || '0x0...';
+  //const userAddress = localStorage.getItem('userAddress') || '0x0...';
 
   return (
     <div className={`dashboard-layout${sidebarOpen ? ' sidebar-open' : ''}`}
@@ -180,10 +180,20 @@ const Dashboard = () => {
               {settingsOpen && (
                 <div className="settings-dropdown">
                   {isAdmin && (
-                    <button onClick={() => { navigate('/admin'); setSettingsOpen(false); }} className="dropdown-item">
-                    Admin
-                    </button>
-                  )}
+                      <a 
+                        href="/admin" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open('/admin', '_blank');
+                          setSettingsOpen(false);
+                        }}
+                      >
+                        Admin
+                      </a>
+                    )}
                   <button onClick={() => { handleLogout(); setSettingsOpen(false); }} className="dropdown-item">
                     Logout
                   </button>

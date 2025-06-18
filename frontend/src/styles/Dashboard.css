@@ -279,9 +279,11 @@ body {
   margin: 0rem 0rem;
   width: 100%;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
+
 .dropdown-item svg, .dropdown-item .icon {
   color: var(--primary-color) !important;
   font-size: 1.2em;

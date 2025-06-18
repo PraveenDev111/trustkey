@@ -60,3 +60,9 @@
 {"timestamp":"2025-06-17 15:58:54","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":21.7359,"tokenGenerationTimeMs":2.2703}
 {"timestamp":"2025-06-17 16:19:48","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"pending","ip":"::1"}
 {"timestamp":"2025-06-17 16:19:51","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":15.6998,"tokenGenerationTimeMs":7.0532}
+{"timestamp":"2025-06-17 16:55:38","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-17 16:55:42","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":21.3984,"tokenGenerationTimeMs":13.5831}
+{"timestamp":"2025-06-17 16:55:51","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-17 16:55:56","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":24.728,"tokenGenerationTimeMs":4.0319}
+{"timestamp":"2025-06-17 18:55:44","type":"nonce_issued","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-17 18:55:50","type":"login","address":"0x77c7710051e3e9e135a98525ff496f9cfec45fc6","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":132.8052,"tokenGenerationTimeMs":2.577}
