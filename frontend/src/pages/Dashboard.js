@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaBars, FaCog, FaTachometerAlt, FaVial } from 'react-icons/fa';
+import { FaBars, FaCog, FaTachometerAlt, FaVial, FaCertificate, FaKey } from 'react-icons/fa';
 import logo from '../assets/trustkey1.png';
 import { useNavigate } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FaCopy, FaDownload } from 'react-icons/fa';
+import CertificateManager from './CertificateManager';
 import '../styles/Dashboard.css';
+import '../styles/CertificateManager.css';
 import { ADMIN_ADDRESS } from '../config';
 
 const Dashboard = () => {
@@ -13,6 +15,7 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [publicKey, setPublicKey] = useState('');
+  const [certificate, setCertificate] = useState(null);
   const [userDetails, setUserDetails] = useState({
     username: '',
     email: '',
@@ -21,6 +24,7 @@ const Dashboard = () => {
   const [copied, setCopied] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
   const navigate = useNavigate();
   
   // Check if current user is admin and fetch user data
@@ -155,8 +159,30 @@ const Dashboard = () => {
             </div>
             <nav className="sidebar-nav">
               <ul>
-                <li className="active">
-                  <a href="#" onClick={() => setSidebarOpen(false)} aria-current="page"><FaTachometerAlt /><span>Overview</span></a>
+                <li className={activeSection === 'overview' ? 'active' : ''}>
+                  <a 
+                    href="#" 
+                    onClick={(e) => { 
+                      e.preventDefault();
+                      setActiveSection('overview');
+                      setSidebarOpen(false);
+                    }} 
+                    aria-current={activeSection === 'overview' ? 'page' : undefined}
+                  >
+                    <FaTachometerAlt /><span>Overview</span>
+                  </a>
+                </li>
+                <li className={activeSection === 'certificate' ? 'active' : ''}>
+                  <a 
+                    href="#" 
+                    onClick={(e) => { 
+                      e.preventDefault();
+                      setActiveSection('certificate');
+                      setSidebarOpen(false);
+                    }}
+                  >
+                    <FaCertificate /><span>Certificate</span>
+                  </a>
                 </li>
                 <li>
                   <a href="#" onClick={() => setSidebarOpen(false)}><FaVial /><span>Test</span></a>
@@ -203,82 +229,100 @@ const Dashboard = () => {
           </div>
         </header>
         <main className="dashboard-content">
-          <div className="dashboard-grid">
-          {/* User Profile Card */}
-          <div className="card user-card user-details">
-              <div className="profile-header">
-                <div className="user-avatar">
-                  {userDetails.username ? userDetails.username.substring(0, 2).toUpperCase() : 'US'}
+          {activeSection === 'overview' ? (
+            <div className="dashboard-grid">
+              {/* User Profile Card */}
+              <div className="card user-card user-details">
+                <div className="profile-header">
+                  <div className="user-avatar">
+                    {userDetails.username ? userDetails.username.substring(0, 2).toUpperCase() : 'US'}
+                  </div>
+                  <h3 style={{ margin: 0, color: '#1e293b' }}>Profile Information</h3>
                 </div>
-                <h3 style={{ margin: 0, color: '#1e293b' }}>Profile Information</h3>
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>Name</th>
+                      <td className="value">{userDetails.username || 'Not set'}</td>
+                    </tr>
+                    <tr>
+                      <th>Email</th>
+                      <td className="value">{userDetails.email || 'Not provided'}</td>
+                    </tr>
+                    <tr>
+                      <th>Wallet Address</th>
+                      <td className="value">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span>{userDetails.address || 'Not available'}</span>
+                          <CopyToClipboard text={userDetails.address} onCopy={handleCopyKey}>
+                            <button className="icon-btn" style={{ padding: '0.25rem' }} title="Copy Address">
+                              <FaCopy size={14} />
+                            </button>
+                          </CopyToClipboard>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Certificate Status</th>
+                      <td className="value">
+                        {certificate ? (
+                          <span className="status-badge active">Active</span>
+                        ) : (
+                          <span className="status-badge inactive">Not Issued</span>
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <table>
-                <tbody>
-                  <tr>
-                    <th>Name</th>
-                    <td className="value">{userDetails.username || 'Not set'}</td>
-                  </tr>
-                  <tr>
-                    <th>Email</th>
-                    <td className="value">{userDetails.email || 'Not provided'}</td>
-                  </tr>
-                  <tr>
-                    <th>Wallet Address</th>
-                    <td className="value">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span>{userDetails.address || 'Not available'}</span>
-                        <CopyToClipboard text={userDetails.address} onCopy={handleCopyKey}>
-                          <button className="icon-btn" style={{ padding: '0.25rem' }} title="Copy Address">
-                            <FaCopy size={14} />
-                          </button>
-                        </CopyToClipboard>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            
-          </div>
-          {/* Public Key Card */}
-          <div className="card public-key-card">
-            <div className="card-header">
-              <h3>Your Public Key</h3>
-              <button 
-                onClick={handleDownloadKey}
-                className="btn download-btn"
-                title="Download Public Key"
-              >
-                <FaDownload /> Download
-              </button>
-            </div>
-            
-            <div className="public-key-container">
-              <pre className="public-key">
-                {publicKey || 'No public key found'}
-              </pre>
-              <CopyToClipboard text={publicKey} onCopy={handleCopyKey}>
-                <button className="copy-btn">
-                  <FaCopy /> {copied ? 'Copied!' : 'Copy'}
-                </button>
-              </CopyToClipboard>
-            </div>
-            
-            <div className="key-actions">
-              <button className="btn primary">Generate New Key Pair</button>
-              <button className="btn secondary">Import Existing Key</button>
-            </div>
-          </div>
+              
+              {/* Public Key Card */}
+              <div className="card public-key-card">
+                <div className="card-header">
+                  <h3>Your Public Key</h3>
+                  <button 
+                    onClick={handleDownloadKey}
+                    className="btn download-btn"
+                    title="Download Public Key"
+                  >
+                    <FaDownload /> Download
+                  </button>
+                </div>
+                
+                <div className="public-key-container">
+                  <pre className="public-key">
+                    {publicKey || 'No public key found'}
+                  </pre>
+                  <CopyToClipboard text={publicKey} onCopy={handleCopyKey}>
+                    <button className="copy-btn">
+                      <FaCopy /> {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                  </CopyToClipboard>
+                </div>
+                
+                <div className="key-actions">
+                  <button className="btn primary" onClick={() => setActiveSection('certificate')}>
+                    <FaCertificate /> Manage Certificate
+                  </button>
+                </div>
+              </div>
 
-          {/* Quick Actions */}
-          <div className="card quick-actions">
-            <h3>Quick Actions</h3>
-            <div className="action-buttons">
-              <button className="btn primary">Sign Document</button>
-              <button className="btn secondary">Verify Signature</button>
-              <button className="btn">View Activity Log</button>
+              {/* Quick Actions */}
+              <div className="card quick-actions">
+                <h3>Quick Actions</h3>
+                <div className="action-buttons">
+                  <button className="btn primary">
+                    <FaKey /> Sign Document
+                  </button>
+                  <button className="btn secondary">
+                    <FaCertificate /> Verify Signature
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            <CertificateManager userAddress={userDetails.address} />
+          )}
 
       </main>
       

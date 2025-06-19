@@ -504,6 +504,33 @@ body {
   line-height: 1.5;
 }
 
+/* Certificate Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+  background-color: #e3f9e5;
+  color: #1b5e20;
+}
+
+.status-badge.inactive,
+.status-badge.revoked {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-badge.pending {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
 .copy-btn {
   position: absolute;
   top: 0.5rem;

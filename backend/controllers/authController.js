@@ -76,7 +76,8 @@ const verifySignature = async (req, res) => {
     // 1. Recover the signer address from the signature
     let signerAddress;
     try {
-      signerAddress = ethers.verifyMessage(nonce, signature);
+      // For ethers v5.x
+      signerAddress = ethers.utils.verifyMessage(nonce, signature);
     } catch (error) {
       logAuthAttempt({
         type: 'login',

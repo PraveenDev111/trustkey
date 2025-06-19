@@ -89,3 +89,12 @@
 {"timestamp":"2025-06-18 22:57:30","type":"login","address":"0xd94cc4f23112dd821b254eaa842a9a642817dc0f","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.2689}
 {"timestamp":"2025-06-18 22:58:20","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
 {"timestamp":"2025-06-18 22:58:26","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.3073}
+{"timestamp":"2025-06-19 11:19:04","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-19 11:24:26","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-19 11:24:33","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"failure","ip":"::1","reason":"invalid_signature","error":"ethers.verifyMessage is not a function"}
+{"timestamp":"2025-06-19 11:35:51","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-19 11:35:57","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"failure","ip":"::1","reason":"invalid_signature","error":"ethers.verifyMessage is not a function"}
+{"timestamp":"2025-06-19 11:36:57","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-19 11:37:06","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"failure","ip":"::1","reason":"invalid_signature","error":"ethers.verifyMessage is not a function"}
+{"timestamp":"2025-06-19 11:42:13","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-19 11:42:21","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":274.8883}
