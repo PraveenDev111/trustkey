@@ -98,3 +98,5 @@
 {"timestamp":"2025-06-19 11:37:06","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"failure","ip":"::1","reason":"invalid_signature","error":"ethers.verifyMessage is not a function"}
 {"timestamp":"2025-06-19 11:42:13","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
 {"timestamp":"2025-06-19 11:42:21","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":274.8883}
+{"timestamp":"2025-06-19 14:38:10","type":"nonce_issued","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-19 14:38:17","type":"login","address":"0xc7cd28ad6f9555f0219626074f6c07626b91d393","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":7.1857}

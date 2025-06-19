@@ -114,7 +114,7 @@ const CertificateManager = ({ userAddress }) => {
   if (loading) {
     return (
       <div className="loading-container">
-        <FaSpinner className="spinner-icon" spin />
+        <FaSpinner className="spinner-icon" spin="true" />
         <p>Loading certificate information...</p>
       </div>
     );
