@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+// Middleware to verify JWT token and attach user to request
 const authMiddleware = (req, res, next) => {
   // Get token from header, which is expected to be in the format "Bearer <token>"
   const authHeader = req.header('Authorization');
@@ -28,4 +29,26 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+// Middleware to check if user has required role
+const authorizeRole = (roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    if (typeof roles === 'string') {
+      roles = [roles];
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    next();
+  };
+};
+
+module.exports = {
+  authMiddleware,
+  authorizeRole
+};

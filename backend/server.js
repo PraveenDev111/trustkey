@@ -4,6 +4,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const testRoutes = require('./routes/test');
+const certificateRoutes = require('./routes/certificateRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/test', testRoutes);
+app.use('/api', certificateRoutes);
 
 // Debug route to test if server is responding
 app.get('/api/ping', (req, res) => {

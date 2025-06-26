@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaCertificate, FaDownload, FaPlus, FaInfoCircle, FaSpinner, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 import { saveAs } from 'file-saver';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -29,7 +30,7 @@ const CertificateManager = ({ userAddress }) => {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        const response = await axios.get(`/api/certificates/${userAddress}`, {
+        const response = await axios.get(`${API_BASE_URL}/certificates/${userAddress}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -70,7 +71,7 @@ const CertificateManager = ({ userAddress }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `/api/certificates/${userAddress}/create`,
+        `${API_BASE_URL}/certificates/${userAddress}/create`,
         formData,
         {
           headers: { 

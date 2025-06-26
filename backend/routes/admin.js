@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
-const isAdmin = require('../middleware/admin');
+const { authMiddleware } = require('../middleware/auth');
+const { authorizeRole } = require('../middleware/auth');
 const { 
   getLogFiles, 
   getLogFileContent, 
@@ -9,8 +9,8 @@ const {
 } = require('../controllers/adminController');
 
 // Apply auth and admin middleware to all routes
-router.use(auth);
-router.use(isAdmin);
+router.use(authMiddleware);
+router.use(authorizeRole('admin'));
 
 // Admin routes
 router.get('/logs', getLogFiles);

@@ -4,8 +4,8 @@ const { logAction } = require('../utils/logger');
 
 /**
  * @desc    Get certificate for a user
- * @route   GET /api/certificates/user/:address
- * @access  Private
+ * @route   GET /api/certificates/:address
+ * @access  Private (Owner or Admin)
  */
 const getUserCertificate = async (req, res) => {
   try {

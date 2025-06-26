@@ -8,7 +8,7 @@ const {
   deactivatePublicKey,
   createCertificate
 } = require('../controllers/certificateController');
-const { authenticateToken, authorizeRole } = require('../middleware/auth');
+const { authMiddleware, authorizeRole } = require('../middleware/auth');
 const {
   validateAddressParam,
   validateKeyIndexParam,
@@ -19,7 +19,7 @@ const {
 } = require('../middleware/certificateMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 /**
  * @route   GET /api/certificates/:address

@@ -116,10 +116,16 @@ const verifySignature = async (req, res) => {
       });
     }
 
+    // Check if the user is an admin
+    const isAdmin = lowerCaseAddress === process.env.ADMIN_ADDRESS?.toLowerCase();
+    
     // Signature is valid, create JWT token
     const endJwtOperation = trackPerformance('jwtIssuance');
     const token = jwt.sign(
-      { address: lowerCaseAddress },
+      { 
+        address: lowerCaseAddress,
+        role: isAdmin ? 'admin' : 'user' 
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );

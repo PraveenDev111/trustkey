@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getNonce, verifySignature, getProtectedData, getAllUsers, logout, getUserDetails, getUserByAddress } = require('../controllers/authController');
-const authMiddleware = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 
 // @route   GET api/auth/nonce/:address
 // @desc    Get a nonce for a user to sign
