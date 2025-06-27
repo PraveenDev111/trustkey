@@ -39,25 +39,28 @@ const CertificateManager = ({ userAddress }) => {
           return;
         }
         
+        console.log('Fetching certificate for address:', userAddress);
         const response = await axios.get(`${API_BASE_URL}/certificates/${userAddress}`, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
+        console.log('Certificate API response:', response.data);
 
         // Handle successful response
         if (response.data.success) {
           if (response.data.hasCertificate) {
-            // User has a certificate
+            // User has a certificate - use the data from the data field
             setCertificate({
-              ...response.data,
+              ...response.data.data,  // Spread the data object
               userAddress: userAddress
             });
             setError('');
           } else {
             // User is registered but has no certificate
             setCertificate(null);
+            console.log('No certificate found for user:', userAddress);
             setError(response.data.message || 'No certificate found for this account.');
           }
         } else {
@@ -172,6 +175,9 @@ const CertificateManager = ({ userAddress }) => {
     );
   }
 
+  // Debug log the current certificate state
+  console.log('Current certificate state:', certificate);
+  
   return (
     <div className="certificate-manager">
       <div className="certificate-header">
