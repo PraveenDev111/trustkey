@@ -121,14 +121,20 @@ const verifySignature = async (req, res) => {
     
     // Signature is valid, create JWT token
     const endJwtOperation = trackPerformance('jwtIssuance');
+    const userPayload = {
+      address: lowerCaseAddress,
+      role: isAdmin ? 'admin' : 'user'
+    };
+    
+    console.log('Creating JWT token with payload:', userPayload);
+    
     const token = jwt.sign(
-      { 
-        address: lowerCaseAddress,
-        role: isAdmin ? 'admin' : 'user' 
-      },
+      userPayload,
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
+    
+    console.log('JWT token created successfully');
     const tokenDuration = endJwtOperation({ operation: 'sign' });
 
     // Important: Invalidate the nonce after use to prevent replay attacks

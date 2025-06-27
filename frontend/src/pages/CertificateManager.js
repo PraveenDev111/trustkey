@@ -27,25 +27,76 @@ const CertificateManager = ({ userAddress }) => {
 
   useEffect(() => {
     const fetchCertificate = async () => {
+      if (!userAddress) return;
+      
       try {
         setLoading(true);
+        setError('');
         const token = localStorage.getItem('token');
+        
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+        
         const response = await axios.get(`${API_BASE_URL}/certificates/${userAddress}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
 
+        // Handle successful response
         if (response.data.success) {
           if (response.data.hasCertificate) {
-            setCertificate(response.data.certificate);
+            // User has a certificate
+            setCertificate({
+              ...response.data,
+              userAddress: userAddress
+            });
+            setError('');
           } else {
+            // User is registered but has no certificate
             setCertificate(null);
+            setError(response.data.message || 'No certificate found for this account.');
           }
+        } else {
+          // Handle API success:false case
+          setError(response.data.message || 'Failed to load certificate information');
+          toast.warning(response.data.message || 'No certificate found');
         }
       } catch (err) {
         console.error('Error fetching certificate:', err);
-        const errorMsg = err.response?.data?.message || 'Failed to load certificate information';
-        setError(errorMsg);
-        toast.error(errorMsg);
+        console.log('Error response data:', err.response?.data);
+        console.log('Error status:', err.response?.status);
+        
+        // Handle specific error cases
+        if (err.response?.status === 401) {
+          // Unauthorized - token expired or invalid
+          localStorage.removeItem('token');
+          navigate('/');
+          return;
+        } else if (err.response?.status === 403) {
+          // Forbidden - user not authorized
+          setError('You are not authorized to view this certificate');
+          toast.error('Access denied');
+        } else if (err.response?.status === 404 && err.response?.data?.code === 'USER_NOT_REGISTERED') {
+          // User not registered in the smart contract
+          const errorMessage = err.response?.data?.message || 'User not registered in the system';
+          setError(errorMessage);
+          toast.warning(errorMessage);
+          setCertificate(null);
+        } else if (err.response?.status === 200 && err.response?.data?.hasCertificate === false) {
+          // User exists but has no certificate
+          setCertificate(null);
+          setError(err.response.data.message || 'No certificate found');
+          // Don't show toast for this case as it's a normal state
+        } else {
+          // Other errors
+          const errorMsg = err.response?.data?.message || 'Failed to load certificate information';
+          setError(errorMsg);
+          toast.error(errorMsg);
+        }
       } finally {
         setLoading(false);
       }

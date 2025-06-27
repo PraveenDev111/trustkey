@@ -19,13 +19,32 @@ const authMiddleware = (req, res, next) => {
   const token = tokenParts[1];
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Add user from payload to the request object
-    req.user = decoded;
+    
+    if (!decoded.address) {
+      return res.status(401).json({ 
+        error: 'Invalid token: missing address',
+        details: 'Token does not contain user address'
+      });
+    }
+    
+    // Set default role if not present
+    if (!decoded.role) {
+      decoded.role = 'user';
+    }
+    
+    req.user = {
+      address: decoded.address.toLowerCase(),
+      role: decoded.role
+    };
+    
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Token is not valid' });
+    console.error('JWT verification failed:', err.message);
+    res.status(401).json({ 
+      error: 'Token is not valid',
+      details: err.message
+    });
   }
 };
 

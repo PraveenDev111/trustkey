@@ -1,6 +1,6 @@
 const { ethers } = require('ethers');
-const { userCertificateManagerContract } = require('../utils/web3');
-const { logAction } = require('../utils/logger');
+const { userCertificateManagerContract, wallet, provider } = require('../utils/web3');
+const { logAuthAttempt } = require('../utils/logger');
 
 /**
  * @desc    Get certificate for a user
@@ -9,45 +9,126 @@ const { logAction } = require('../utils/logger');
  */
 const getUserCertificate = async (req, res) => {
   try {
+    console.log('=== getUserCertificate called ===');
     const { address } = req.params;
     
-    // Only allow users to view their own certificate unless admin
-    if (address.toLowerCase() !== req.user.address.toLowerCase() && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to view this certificate'
+    try {
+      const [
+        serialNumber,
+        commonName,
+        organization,
+        validFrom,
+        validTo,
+        isRevoked
+      ] = await userCertificateManagerContract.getCertificateInfo(address);
+      
+      console.log('Certificate data received:', {
+        serialNumber,
+        commonName,
+        organization,
+        validFrom: validFrom.toString(),
+        validTo: validTo.toString(),
+        isRevoked
       });
-    }
-
-    // Check if user is registered
-    const isRegistered = await userCertificateManagerContract.isUserRegistered(address);
-    if (!isRegistered) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found or not registered'
+      
+      if (!serialNumber || serialNumber === '') {
+        console.log('No certificate found for address:', address);
+        return res.status(200).json({
+          success: true,
+          hasCertificate: false,
+          message: 'No certificate found for this address',
+          address: address
+        });
+      }
+      
+      // If we get here, we have a certificate
+      console.log('Certificate found for address:', address);
+      return res.status(200).json({
+        success: true,
+        hasCertificate: true,
+        data: {
+          serialNumber,
+          commonName,
+          organization,
+          validFrom: validFrom.toString(),
+          validTo: validTo.toString(),
+          isRevoked,
+          userAddress: address
+        }
       });
+      
+    } catch (error) {
+      console.error('Error getting certificate info:', error);
+      if (error.message.includes('No certificate found') || 
+          error.message.includes('revert') ||
+          error.message.includes('invalid opcode')) {
+        console.log('No certificate exists for address (error):', address);
+        return res.status(200).json({
+          success: true,
+          hasCertificate: false,
+          message: 'No certificate exists for this address',
+          error: error.message,
+          address: address
+        });
+      }
+      throw error; // Re-throw other errors
     }
 
     // Get certificate info from the contract
-    const [
-      serialNumber,
-      commonName,
-      organization,
-      validFrom,
-      validTo,
-      isRevoked
-    ] = await userCertificateManagerContract.getCertificateInfo(address);
+    try {
+      const [
+        serialNumber,
+        commonName,
+        organization,
+        validFrom,
+        validTo,
+        isRevoked
+      ] = await userCertificateManagerContract.getCertificateInfo(address);
 
-    // If no certificate exists
-    if (serialNumber === '') {
+      // If no certificate exists
+      if (!serialNumber || serialNumber === '') {
+        return res.status(200).json({
+          success: true,
+          hasCertificate: false,
+          message: 'No certificate found for this user'
+        });
+      }
+
+      // If we get here, the user has a certificate
       return res.status(200).json({
         success: true,
-        hasCertificate: false
+        hasCertificate: true,
+        data: {
+          serialNumber,
+          commonName,
+          organization,
+          validFrom,
+          validTo,
+          isRevoked,
+          userAddress: address
+        }
       });
+    } catch (error) {
+      // Handle case where getCertificateInfo fails (user has no certificate)
+      if (error.message.includes('No certificate found') || 
+          error.message.includes('revert') ||
+          error.message.includes('invalid opcode')) {
+        return res.status(200).json({
+          success: true,
+          hasCertificate: false,
+          message: 'No certificate found for this user'
+        });
+      }
+      throw error; // Re-throw other errors
     }
 
-    // Get active public key
-    const activePublicKey = await userCertificateManagerContract.getActivePublicKey(address);
+    // If we get here, there was an unhandled case
+    console.error('Unhandled case in getUserCertificate');
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      code: 'INTERNAL_ERROR'
+    });
 
     const certificate = {
       serialNumber,
@@ -278,6 +359,10 @@ const deactivatePublicKey = async (req, res) => {
  * @access  Private
  */
 const createCertificate = async (req, res) => {
+  console.log('=== createCertificate called ===');
+  console.log('Params:', req.params);
+  console.log('User:', req.user);
+  
   try {
     const { address } = req.params;
     const {
@@ -288,9 +373,59 @@ const createCertificate = async (req, res) => {
       organization,
       commonName,
       publicKey,
+      signatureAlgorithm = 'sha256WithRSAEncryption',
+      validDays = 365 // Default to 1 year if not specified
+    } = req.body;
+    
+    console.log('Using wallet address for transaction:', wallet.address);
+
+    // Log the incoming request details
+    console.log('Request body:', {
+      serialNumber,
+      country,
+      state,
+      locality,
+      organization,
+      commonName,
+      publicKey: publicKey ? `${publicKey.substring(0, 20)}...` : 'none',
       signatureAlgorithm,
       validDays
-    } = req.body;
+    });
+
+    // Validate required fields
+    const requiredFields = {
+      serialNumber,
+      country,
+      state,
+      locality,
+      organization,
+      commonName,
+      publicKey,
+      validDays
+    };
+
+    const missingFields = Object.entries(requiredFields)
+      .filter(([_, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      console.error('Missing required fields:', missingFields);
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields',
+        missingFields
+      });
+    }
+
+    // Ensure we have a user object with address
+    if (!req.user || !req.user.address) {
+      console.error('No user information available in request');
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required',
+        code: 'UNAUTHORIZED'
+      });
+    }
 
     // Validate required fields
     if (!serialNumber || !country || !state || !locality || !organization || !commonName || !publicKey || !validDays) {
@@ -318,21 +453,51 @@ const createCertificate = async (req, res) => {
       });
     }
 
-    // Call the issueCertificate function in the contract
-    const tx = await userCertificateManagerContract.issueCertificate(
-      serialNumber,
-      country,
-      state,
-      locality,
-      organization,
-      commonName,
-      publicKey,
-      signatureAlgorithm || 'sha256WithRSAEncryption',
-      validDays,
-      { from: req.user.address }
-    );
+    console.log('Sending transaction to issue certificate...');
     
-    await tx.wait();
+    try {
+      // Call the issueCertificate function in the contract
+      const tx = await userCertificateManagerContract.issueCertificate(
+        serialNumber,
+        country,
+        state,
+        locality,
+        organization,
+        commonName,
+        publicKey,
+        signatureAlgorithm,
+        validDays,
+        { 
+          gasLimit: 1000000, // Adjust gas limit as needed
+          gasPrice: ethers.utils.parseUnits('10', 'gwei') // Adjust gas price as needed
+        }
+      );
+      
+      console.log('Transaction hash:', tx.hash);
+      console.log('Waiting for transaction to be mined...');
+      
+      // Wait for the transaction to be mined
+      const receipt = await tx.wait();
+      console.log('Transaction mined in block:', receipt.blockNumber);
+      
+      // Get the transaction details
+      const txDetails = await provider.getTransactionReceipt(tx.hash);
+      console.log('Transaction details:', {
+        blockHash: txDetails.blockHash,
+        blockNumber: txDetails.blockNumber,
+        gasUsed: txDetails.gasUsed.toString(),
+        status: txDetails.status === 1 ? 'Success' : 'Failed'
+      });
+    } catch (txError) {
+      console.error('Transaction error:', txError);
+      if (txError.reason) {
+        console.error('Transaction reverted with reason:', txError.reason);
+      }
+      if (txError.transaction) {
+        console.error('Transaction that caused the error:', txError.transaction);
+      }
+      throw txError;
+    }
 
     // Get the created certificate
     const [
@@ -355,9 +520,15 @@ const createCertificate = async (req, res) => {
       userAddress: address
     };
 
-    logAction('certificate_created', req.user.address, {
-      targetUser: address,
-      serialNumber: certificate.serialNumber
+    logAuthAttempt({
+      type: 'certificate_created',
+      address: req.user.address,
+      status: 'success',
+      ip: req.ip,
+      metadata: {
+        targetUser: address,
+        serialNumber: certificate.serialNumber
+      }
     });
 
     res.status(201).json({

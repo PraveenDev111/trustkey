@@ -78,15 +78,47 @@ const validateAddPublicKey = [
  * Middleware to authorize certificate access (owner or admin)
  */
 const authorizeCertificateAccess = (req, res, next) => {
+  console.log('authorizeCertificateAccess - Start');
+  console.log('Request params:', req.params);
+  console.log('User from token:', req.user);
+  
   const { address } = req.params;
   
-  if (address.toLowerCase() !== req.user.address.toLowerCase() && req.user.role !== 'admin') {
-    return res.status(403).json({
+  if (!address) {
+    console.error('No address in params');
+    return res.status(400).json({
       success: false,
-      message: 'Not authorized to access this resource'
+      message: 'Address parameter is required'
     });
   }
   
+  if (!req.user || !req.user.address) {
+    console.error('No user in request');
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required'
+    });
+  }
+  
+  const isOwner = address.toLowerCase() === req.user.address.toLowerCase();
+  const isAdmin = req.user.role === 'admin';
+  
+  console.log(`Access check - isOwner: ${isOwner}, isAdmin: ${isAdmin}`);
+  
+  if (!isOwner && !isAdmin) {
+    console.log('Access denied - not owner or admin');
+    return res.status(403).json({
+      success: false,
+      message: 'Not authorized to access this resource',
+      details: {
+        requestedAddress: address,
+        userAddress: req.user.address,
+        userRole: req.user.role || 'user'
+      }
+    });
+  }
+  
+  console.log('Access granted');
   next();
 };
 
