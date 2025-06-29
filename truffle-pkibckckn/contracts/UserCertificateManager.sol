@@ -12,7 +12,7 @@ contract UserCertificateManager {
 
     // Certificate Management
     struct PublicKey {
-        string keyData;
+        bytes keyData;
         bool isActive;
         uint256 addedAt;
     }
@@ -75,7 +75,7 @@ contract UserCertificateManager {
         // Add the public key to the keys array
         userPublicKeys[msg.sender].push(
             PublicKey({
-                keyData: string(publicKey),
+                keyData: publicKey,
                 isActive: true,
                 addedAt: block.timestamp
             })
@@ -126,9 +126,9 @@ contract UserCertificateManager {
     }
 
     // Public Key Management
-    function addPublicKey(string memory _keyData) public {
+    function addPublicKey(bytes memory _keyData) public {
         require(users[msg.sender].exists, "User not registered");
-        require(bytes(_keyData).length > 0, "Public key cannot be empty");
+        require(_keyData.length > 0, "Public key cannot be empty");
 
         // Add new public key
         userPublicKeys[msg.sender].push(
@@ -143,7 +143,7 @@ contract UserCertificateManager {
         uint256 newKeyIndex = userPublicKeys[msg.sender].length - 1;
         activeKeyIndex[msg.sender] = newKeyIndex;
 
-        emit PublicKeyAdded(msg.sender, _keyData);
+        emit PublicKeyAdded(msg.sender, string(_keyData));
     }
 
     function deactivatePublicKey(uint256 _keyIndex) external {
@@ -199,7 +199,7 @@ contract UserCertificateManager {
     // View Functions
     function getActivePublicKey(
         address _user
-    ) external view returns (string memory) {
+    ) external view returns (bytes memory) {
         require(users[_user].exists, "User not registered");
         uint256 activeIndex = activeKeyIndex[_user];
         require(userPublicKeys[_user].length > 0, "No public keys found");
@@ -216,7 +216,7 @@ contract UserCertificateManager {
     ) external view returns (PublicKey[] memory) {
         require(users[_user].exists, "User not registered");
         return userPublicKeys[_user];
-    }
+    } // No change needed here, struct already updated
 
     function getCertificateInfo(
         address _user
