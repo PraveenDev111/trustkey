@@ -17,9 +17,10 @@ const RegisterUserMetaMask = () => {
   // eslint-disable-next-line
   const [success, setSuccess] = useState('');
   const [contract, setContract] = useState(null);
-  const [publicKey, setPublicKey] = useState('');
-  const [privateKey, setPrivateKey] = useState('');
-  const [copied, setCopied] = useState(false);
+  // No public/private key state needed for registration anymore
+  // const [publicKey, setPublicKey] = useState('');
+  // const [privateKey, setPrivateKey] = useState('');
+  // const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     console.log('Component mounted, initializing contract...');
@@ -39,38 +40,13 @@ const RegisterUserMetaMask = () => {
     initializeContract();
   }, []);
 
-  // Generate key pair
-  const generateKeys = () => {
-    try {
-      // Generate random private key
-      const privateKeyHex = web3Instance.utils.randomHex(32);
-       
-      // Generate public key from private key
-      const ec = new EC('secp256k1');
-      const keyPair = ec.keyFromPrivate(privateKeyHex.replace('0x', ''), 'hex');
-      const publicKeyHex = '0x' + keyPair.getPublic('hex');
-      
-      setPrivateKey(privateKeyHex);
-      setPublicKey(publicKeyHex);
-      
-      return { publicKeyHex, privateKeyHex };
-    } catch (error) {
-      console.error('Key generation error:', error);
-      setError('Failed to generate keys');
-      return null;
-    }
-  };
+  // Key pair generation removed. Registration no longer requires a key pair.
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!email || !username) {
       setError('Please fill in email and username');
-      return;
-    }
-  
-    if (!publicKey || !privateKey) {
-      setError('Please generate keys first');
       return;
     }
   
@@ -83,11 +59,7 @@ const RegisterUserMetaMask = () => {
       const metaMaskAccount = accounts[0];
       console.log('2. MetaMask account:', metaMaskAccount);
   
-      console.log('3. Converting public key to bytes...');
-      const cleanPublicKey = publicKey.startsWith('0x') ? publicKey : `0x${publicKey}`;
-      const publicKeyBytes = web3Instance.utils.hexToBytes(cleanPublicKey);
-      console.log('4. Public key bytes:', publicKeyBytes);
-  
+      // No public key conversion or key bytes needed. Prepare transaction without public key.
       console.log('5. Checking MetaMask account balance...');
       const balance = await web3Instance.eth.getBalance(metaMaskAccount);
       console.log('Account balance:', web3Instance.utils.fromWei(balance, 'ether'), 'ETH');
@@ -105,7 +77,7 @@ const RegisterUserMetaMask = () => {
         data: contract.methods.registerUser(
           email, 
           username, 
-          publicKeyBytes
+          [] // empty bytes for publicKey, or remove param if contract signature changed
         ).encodeABI()
       };
       try {
@@ -113,8 +85,7 @@ const RegisterUserMetaMask = () => {
         // First, estimate gas
         const gasEstimate = await contract.methods.registerUser(
           email, 
-          username, 
-          publicKeyBytes
+          username,[]
         ).estimateGas({ from: metaMaskAccount });
         
         console.log('Estimated gas:', gasEstimate);
@@ -136,8 +107,7 @@ const RegisterUserMetaMask = () => {
           gasLimit: gasLimitHex,
           data: contract.methods.registerUser(
             email, 
-            username, 
-            publicKeyBytes
+            username,[]
           ).encodeABI()
         };
         
@@ -166,8 +136,6 @@ const RegisterUserMetaMask = () => {
       const userData = {
         email,
         username,
-        publicKey,
-        //privateKey, // In production, encrypt this before storing
         address: metaMaskAccount
       };
       console.log('User data to be stored:', userData);
@@ -175,10 +143,7 @@ const RegisterUserMetaMask = () => {
       // Reset form
       setEmail('');
       setUsername('');
-      setPublicKey('');
-      setPrivateKey('');
-  
-      alert('Registration successful! Please keep your private key secure.');
+      alert('Registration successful!');
     } catch (error) {
       console.error('Registration failed - Full error:', {
         error,
@@ -244,52 +209,12 @@ const RegisterUserMetaMask = () => {
               </div>
 
               <button
-                type="button" // Important: type is button to prevent form submission
-                onClick={generateKeys}
-                className="btn btn-secondary"
-                disabled={loading} // Disable if already loading from registration
-                style={{ marginBottom: '1rem' }} // Add some space below
-              >
-                <FaKey style={{ marginRight: '8px' }} /> Generate Keys
-              </button>
-
-              <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={loading || !contract || !publicKey} // Also disable if keys are not generated
+                disabled={loading || !contract}
               >
                 {loading ? 'Processing...' : 'Register with MetaMask'}
               </button>
-
-              {/* Private key display section - moved inside the card */}
-              {privateKey && (
-                <div className="private-key-warning">
-                  <h4>Important: Save Your Private Key</h4>
-                  <p>This is the only time you'll see your private key. Save it in a secure location.</p>
-                  <div className="private-key-display">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span>{privateKey}</span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(privateKey);
-                          setCopied(true);
-                          setTimeout(() => setCopied(false), 2000);
-                        }}
-                        style={{ 
-                          background: 'none', 
-                          border: 'none', 
-                          color: '#3b82f6', 
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center'
-                        }}
-                      >
-                        {copied ? <FaCheck style={{ color: '#10b981' }} /> : <FaCopy />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
             </form>
             <Link to="/" className="back-link">
               <FaArrowLeft /> Back to Login

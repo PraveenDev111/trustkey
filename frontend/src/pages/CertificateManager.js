@@ -354,19 +354,43 @@ const CertificateManager = ({ userAddress }) => {
                 <span className="label">Organization:</span>
                 <span className="value">{certificate.organization}</span>
               </div>
+
+              <div className="info-row">
+                <span className="label">Signature Algorithm:</span>
+                <span className="value">
+                  {certificate.signatureAlgorithm || 'sha256WithRSAEncryption'}
+                </span>
+              </div>
+              
+              <div className="info-row">
+                <span className="label">Public Key:</span>
+                <div className="public-key-value">
+                  <textarea 
+                    readOnly 
+                    value={certificate.publicKey} 
+                    className="public-key-textarea"
+                    onClick={(e) => e.target.select()}
+                  />
+                </div>
+              </div>
               
               <div className="info-row">
                 <span className="label">Valid From:</span>
                 <span className="value">
-                  {new Date(certificate.validFrom * 1000).toLocaleDateString()}
+                  {new Date(certificate.validFrom * 1000).toLocaleString()}
                 </span>
               </div>
               
               <div className="info-row">
                 <span className="label">Valid To:</span>
                 <span className="value">
-                  {new Date(certificate.validTo * 1000).toLocaleDateString()}
+                  {new Date(certificate.validTo * 1000).toLocaleString()}
                 </span>
+              </div>
+              
+              <div className="info-row">
+                <span className="label">Issuer:</span>
+                <span className="value">{certificate.issuer || 'TrustKey Certificate Authority'}</span>
               </div>
             </div>
             

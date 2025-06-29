@@ -2,12 +2,17 @@
 pragma solidity ^0.8.0;
 
 contract UserCertificateManager {
+    address public admin;
+    
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can perform this action");
+        _;
+    }
     // User Management
     struct User {
         bool exists;
         string username;
         string email;
-        bytes publicKey; // Keep the original public key for backward compatibility
     }
 
     // Certificate Management
@@ -48,6 +53,10 @@ contract UserCertificateManager {
     event CertificateRevoked(address indexed user, string reason);
 
     // User Registration
+    constructor() {
+        admin = msg.sender;
+    }
+
     function registerUser(
         string memory email,
         string memory username,
@@ -55,7 +64,7 @@ contract UserCertificateManager {
     ) public {
         require(bytes(email).length > 0, "Email cannot be empty");
         require(bytes(username).length > 0, "Username cannot be empty");
-        require(publicKey.length > 0, "Public key cannot be empty");
+        // No longer require publicKey to register a user
         require(!users[msg.sender].exists, "User already registered");
         require(
             publicKeyToAddress[publicKey] == address(0),
@@ -65,11 +74,10 @@ contract UserCertificateManager {
         users[msg.sender] = User({
             exists: true,
             username: username,
-            email: email,
-            publicKey: publicKey
+            email: email
         });
 
-        publicKeyToAddress[publicKey] = msg.sender;
+        publicKeyToAddress[publicKey] = msg.sender; // Still map for initial key, if provided
         registeredUsers.push(msg.sender);
 
         // Add the public key to the keys array
@@ -125,6 +133,44 @@ contract UserCertificateManager {
         emit CertificateIssued(msg.sender, _serialNumber);
     }
 
+    // ADMIN: Issue certificate for any user
+    function issueCertificateFor(
+        address user,
+        string memory _serialNumber,
+        string memory _country,
+        string memory _state,
+        string memory _locality,
+        string memory _organization,
+        string memory _commonName,
+        string memory _publicKey,
+        string memory _signatureAlgorithm,
+        uint256 _validDays
+    ) external onlyAdmin {
+        require(users[user].exists, "User not registered");
+        require(bytes(_publicKey).length > 0, "Public key cannot be empty");
+        require(_validDays > 0, "Validity period must be positive");
+        require(
+            bytes(userCertificates[user].serialNumber).length == 0,
+            "Certificate already exists"
+        );
+        uint256 validFrom = block.timestamp;
+        uint256 validTo = validFrom + (_validDays * 1 days);
+        userCertificates[user] = Certificate({
+            serialNumber: _serialNumber,
+            country: _country,
+            state: _state,
+            locality: _locality,
+            organization: _organization,
+            commonName: _commonName,
+            publicKey: _publicKey,
+            signatureAlgorithm: _signatureAlgorithm,
+            validFrom: validFrom,
+            validTo: validTo,
+            isRevoked: false
+        });
+        emit CertificateIssued(user, _serialNumber);
+    }
+
     // Public Key Management
     function addPublicKey(bytes memory _keyData) public {
         require(users[msg.sender].exists, "User not registered");
@@ -144,6 +190,22 @@ contract UserCertificateManager {
         activeKeyIndex[msg.sender] = newKeyIndex;
 
         emit PublicKeyAdded(msg.sender, string(_keyData));
+    }
+
+    // ADMIN: Add public key for any user
+    function addPublicKeyFor(address user, bytes memory _keyData) external onlyAdmin {
+        require(users[user].exists, "User not registered");
+        require(_keyData.length > 0, "Public key cannot be empty");
+        userPublicKeys[user].push(
+            PublicKey({
+                keyData: _keyData,
+                isActive: true,
+                addedAt: block.timestamp
+            })
+        );
+        uint256 newKeyIndex = userPublicKeys[user].length - 1;
+        activeKeyIndex[user] = newKeyIndex;
+        emit PublicKeyAdded(user, string(_keyData));
     }
 
     function deactivatePublicKey(uint256 _keyIndex) external {
@@ -173,6 +235,24 @@ contract UserCertificateManager {
         }
 
         emit PublicKeyDeactivated(msg.sender, _keyIndex);
+    }
+
+    // ADMIN: Deactivate public key for any user
+    function deactivatePublicKeyFor(address user, uint256 _keyIndex) external onlyAdmin {
+        require(users[user].exists, "User not registered");
+        require(_keyIndex < userPublicKeys[user].length, "Invalid key index");
+        require(userPublicKeys[user][_keyIndex].isActive, "Key already inactive");
+        require(userPublicKeys[user].length > 1, "Cannot deactivate the only key");
+        userPublicKeys[user][_keyIndex].isActive = false;
+        if (activeKeyIndex[user] == _keyIndex) {
+            for (uint256 i = 0; i < userPublicKeys[user].length; i++) {
+                if (i != _keyIndex && userPublicKeys[user][i].isActive) {
+                    activeKeyIndex[user] = i;
+                    break;
+                }
+            }
+        }
+        emit PublicKeyDeactivated(user, _keyIndex);
     }
 
     function revokeCertificate(string memory _reason) external {
@@ -298,9 +378,9 @@ contract UserCertificateManager {
     // Get user details (from UserAuth)
     function getUserDetails(
         address user
-    ) public view returns (string memory, string memory, bytes memory) {
+    ) public view returns (string memory, string memory) {
         require(users[user].exists, "User not registered");
-        return (users[user].username, users[user].email, users[user].publicKey);
+        return (users[user].username, users[user].email);
     }
 
     // Check if user exists (from UserAuth)

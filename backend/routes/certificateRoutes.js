@@ -9,12 +9,6 @@ const {
   createCertificate
 } = require('../controllers/certificateController');
 
-// Simple test route
-router.get('/test', (req, res) => {
-  console.log('Test route hit');
-  res.json({ status: 'test route working' });
-});
-
 // Debug route - no auth middleware
 router.get('/certificates/debug/:address', async (req, res) => {
   console.log('Debug route hit with address:', req.params.address);
@@ -51,8 +45,32 @@ router.post('/certificates/:address/create', async (req, res, next) => {
   next();
 }, createCertificate);
 router.post('/certificates/revoke/:address', revokeCertificate);
-router.get('/certificates/keys/:address', getUserPublicKeys);
-router.post('/certificates/keys', addPublicKey);
-router.delete('/certificates/keys/:keyIndex', deactivatePublicKey);
+router.get('/certificates/keys/:address', async (req, res, next) => {
+  // Manually set a mock user for testing
+  req.user = {
+    address: req.params.address.toLowerCase(),
+    role: 'user'  // Default role
+  };
+  next();
+}, getUserPublicKeys);
+router.post('/certificates/keys', async (req, res, next) => {
+  // For adding keys, we expect the address in the request body
+  const address = req.body.address || '';
+  req.user = {
+    address: address.toLowerCase(),
+    role: 'user'  // Default role
+  };
+  next();
+}, addPublicKey);
+
+router.delete('/certificates/keys/:keyIndex', async (req, res, next) => {
+  // For deactivating keys, we need to get the address from the request body or query
+  const address = req.body.address || req.query.address || '';
+  req.user = {
+    address: address.toLowerCase(),
+    role: 'user'  // Default role
+  };
+  next();
+}, deactivatePublicKey);
 
 module.exports = router;

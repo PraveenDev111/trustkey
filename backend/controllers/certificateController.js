@@ -7,12 +7,61 @@ const { logAuthAttempt } = require('../utils/logger');
  * @route   GET /api/certificates/:address
  * @access  Private (Owner or Admin)
  */
+/**
+ * Helper function to handle certificate not found responses
+ */
+const handleCertificateNotFound = (res, address, error = null) => {
+  const response = {
+    success: true,
+    hasCertificate: false,
+    message: 'No certificate found for this address',
+    address: address
+  };
+  
+  if (error) {
+    response.error = error.message;
+  }
+  
+  return res.status(200).json(response);
+};
+
+/**
+ * Helper function to format certificate response
+ */
+const formatCertificateResponse = (certificateData, additionalData = {}) => {
+  const {
+    serialNumber,
+    commonName,
+    organization,
+    validFrom,
+    validTo,
+    isRevoked,
+    userAddress
+  } = certificateData;
+  
+  return {
+    success: true,
+    hasCertificate: true,
+    data: {
+      serialNumber,
+      commonName,
+      organization,
+      validFrom: validFrom ? validFrom.toString() : null,
+      validTo: validTo ? validTo.toString() : null,
+      isRevoked: Boolean(isRevoked),
+      userAddress,
+      ...additionalData
+    }
+  };
+};
+
 const getUserCertificate = async (req, res) => {
   try {
     console.log('=== getUserCertificate called ===');
     const { address } = req.params;
     
     try {
+      // Get certificate info
       const [
         serialNumber,
         commonName,
@@ -26,128 +75,104 @@ const getUserCertificate = async (req, res) => {
         serialNumber,
         commonName,
         organization,
-        validFrom: validFrom.toString(),
-        validTo: validTo.toString(),
+        validFrom: validFrom ? validFrom.toString() : null,
+        validTo: validTo ? validTo.toString() : null,
         isRevoked
       });
       
+      // If no certificate exists
       if (!serialNumber || serialNumber === '') {
         console.log('No certificate found for address:', address);
-        return res.status(200).json({
-          success: true,
-          hasCertificate: false,
-          message: 'No certificate found for this address',
-          address: address
-        });
+        return handleCertificateNotFound(res, address);
       }
       
-      // If we get here, we have a certificate
-      console.log('Certificate found for address:', address);
-      return res.status(200).json({
-        success: true,
-        hasCertificate: true,
-        data: {
-          serialNumber,
-          commonName,
-          organization,
-          validFrom: validFrom.toString(),
-          validTo: validTo.toString(),
-          isRevoked,
-          userAddress: address
+      // Get additional certificate details
+      let certificate, publicKey = '';
+      
+      try {
+        // Get the certificate object for additional fields
+        certificate = await userCertificateManagerContract.userCertificates(address);
+        
+        // Try to get public key from certificate first
+        if (certificate && certificate.publicKey) {
+          publicKey = certificate.publicKey;
+        } else {
+          // Fallback to getActivePublicKey if not found in certificate
+          try {
+            const keyBytes = await userCertificateManagerContract.getActivePublicKey(address);
+            // Handle different key formats
+            if (keyBytes) {
+              if (typeof keyBytes === 'string') {
+                publicKey = keyBytes;
+              } else if (keyBytes._isBigNumber) {
+                publicKey = '0x' + keyBytes.toHexString().substring(2);
+              } else if (keyBytes instanceof Uint8Array || Array.isArray(keyBytes)) {
+                // Handle Uint8Array or array of numbers
+                const hex = Array.from(keyBytes)
+                  .map(b => b.toString(16).padStart(2, '0'))
+                  .join('');
+                publicKey = '0x' + hex;
+              } else if (keyBytes.hex) {
+                // Handle object with hex property
+                publicKey = keyBytes.hex;
+              } else if (keyBytes.toString) {
+                // Last resort: try to stringify
+                publicKey = keyBytes.toString('hex');
+              }
+            }
+          } catch (keyError) {
+            console.log('Error getting active public key:', keyError.message);
+            // Try alternative method to get public key if available
+            try {
+              const userDetails = await userCertificateManagerContract.getUserDetails(address);
+              if (userDetails && userDetails[2]) {
+                // Convert the public key bytes to hex string
+                const pubKeyBytes = userDetails[2];
+                if (typeof pubKeyBytes === 'string') {
+                  publicKey = pubKeyBytes;
+                } else {
+                  publicKey = '0x' + Buffer.from(pubKeyBytes).toString('hex');
+                }
+              }
+            } catch (e) {
+              console.log('Alternative public key fetch failed:', e.message);
+            }
+          }
         }
-      });
+        
+        // Format and return the complete certificate data
+        const response = formatCertificateResponse(
+          { serialNumber, commonName, organization, validFrom, validTo, isRevoked, userAddress: address },
+          {
+            publicKey,
+            signatureAlgorithm: (certificate && certificate.signatureAlgorithm) || 'sha256WithRSAEncryption'
+          }
+        );
+        
+        console.log('Certificate found for address:', address);
+        return res.status(200).json(response);
+        
+      } catch (detailsError) {
+        console.error('Error getting certificate details:', detailsError);
+        // If we can't get additional details, still return the basic certificate info
+        return res.status(200).json(
+          formatCertificateResponse(
+            { serialNumber, commonName, organization, validFrom, validTo, isRevoked, userAddress: address },
+            { publicKey: '', signatureAlgorithm: 'sha256WithRSAEncryption' }
+          )
+        );
+      }
       
     } catch (error) {
       console.error('Error getting certificate info:', error);
       if (error.message.includes('No certificate found') || 
           error.message.includes('revert') ||
           error.message.includes('invalid opcode')) {
-        console.log('No certificate exists for address (error):', address);
-        return res.status(200).json({
-          success: true,
-          hasCertificate: false,
-          message: 'No certificate exists for this address',
-          error: error.message,
-          address: address
-        });
+        return handleCertificateNotFound(res, address, error);
       }
       throw error; // Re-throw other errors
     }
-
-    // Get certificate info from the contract
-    try {
-      const [
-        serialNumber,
-        commonName,
-        organization,
-        validFrom,
-        validTo,
-        isRevoked
-      ] = await userCertificateManagerContract.getCertificateInfo(address);
-
-      // If no certificate exists
-      if (!serialNumber || serialNumber === '') {
-        return res.status(200).json({
-          success: true,
-          hasCertificate: false,
-          message: 'No certificate found for this user'
-        });
-      }
-
-      // If we get here, the user has a certificate
-      return res.status(200).json({
-        success: true,
-        hasCertificate: true,
-        data: {
-          serialNumber,
-          commonName,
-          organization,
-          validFrom,
-          validTo,
-          isRevoked,
-          userAddress: address
-        }
-      });
-    } catch (error) {
-      // Handle case where getCertificateInfo fails (user has no certificate)
-      if (error.message.includes('No certificate found') || 
-          error.message.includes('revert') ||
-          error.message.includes('invalid opcode')) {
-        return res.status(200).json({
-          success: true,
-          hasCertificate: false,
-          message: 'No certificate found for this user'
-        });
-      }
-      throw error; // Re-throw other errors
-    }
-
-    // If we get here, there was an unhandled case
-    console.error('Unhandled case in getUserCertificate');
-    return res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      code: 'INTERNAL_ERROR'
-    });
-
-    const certificate = {
-      serialNumber,
-      commonName,
-      organization,
-      validFrom: new Date(Number(validFrom) * 1000).toISOString(),
-      validTo: new Date(Number(validTo) * 1000).toISOString(),
-      isRevoked,
-      publicKey: activePublicKey,
-      userAddress: address
-    };
-
-    logAction('get_user_certificate', req.user.address, { targetUser: address });
     
-    res.status(200).json({
-      success: true,
-      hasCertificate: true,
-      data: certificate
-    });
   } catch (error) {
     console.error(`Error getting certificate for user ${req.params.address}:`, error);
     res.status(500).json({
@@ -221,7 +246,7 @@ const revokeCertificate = async (req, res) => {
 };
 
 /**
- * @desc    Get user's public keys
+ * @desc    Get user's active public key
  * @route   GET /api/certificates/keys/:address
  * @access  Private
  */
@@ -229,53 +254,61 @@ const getUserPublicKeys = async (req, res) => {
   try {
     const { address } = req.params;
     
-    // Only allow users to view their own keys unless admin
+    // Basic validation
+    if (!req.user || !req.user.address) {
+      return res.status(400).json({ success: false, message: 'Authentication required' });
+    }
+    
+    // Authorization check
     if (address.toLowerCase() !== req.user.address.toLowerCase() && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to view these keys'
-      });
+      return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
-    // Check if user is registered
-    const isRegistered = await userCertificateManagerContract.isUserRegistered(address);
-    if (!isRegistered) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found or not registered'
-      });
+    // Get all public keys
+    let publicKeys = await userCertificateManagerContract.getUserPublicKeys(address);
+    // Defensive: some providers may return an object instead of array, handle both
+    if (!Array.isArray(publicKeys) && typeof publicKeys === 'object' && publicKeys.length !== undefined) {
+      publicKeys = Array.from(publicKeys);
     }
 
-    // Get all public keys for the user
-    const publicKeys = await userCertificateManagerContract.getUserPublicKeys(address);
-    
-    // Get the active key index
-    const activeKeyIndex = await userCertificateManagerContract.activeKeyIndex(address);
-
-    const formattedKeys = publicKeys.map((key, index) => ({
-      index,
-      keyData: key.keyData,
-      isActive: key.isActive,
-      addedAt: new Date(Number(key.addedAt) * 1000).toISOString(),
-      isCurrentActive: index === activeKeyIndex
-    }));
-
-    logAction('get_user_public_keys', req.user.address, { 
-      targetUser: address,
-      keyCount: formattedKeys.length 
+    // Format the keys for frontend (ensure hex for keyData, readable timestamps)
+    const formattedKeys = publicKeys.map((key, idx) => {
+      let keyHex;
+      if (typeof key.keyData === 'string') {
+        // Convert UTF-8 string to hex for consistency
+        keyHex = '0x' + Buffer.from(key.keyData, 'utf8').toString('hex');
+      } else if (key.keyData instanceof Uint8Array || Array.isArray(key.keyData)) {
+        keyHex = '0x' + Buffer.from(key.keyData).toString('hex');
+      } else if (Buffer.isBuffer(key.keyData)) {
+        keyHex = '0x' + key.keyData.toString('hex');
+      } else {
+        keyHex = String(key.keyData);
+      }
+      return {
+        keyData: keyHex,
+        isActive: key.isActive,
+        addedAt: key.addedAt ? new Date(Number(key.addedAt) * 1000).toISOString() : null,
+        index: idx
+      };
     });
-    
-    res.status(200).json({
+
+    res.json({
       success: true,
-      data: formattedKeys
+      publicKeys: formattedKeys
     });
+    
   } catch (error) {
-    console.error(`Error getting public keys for user ${req.params.address}:`, error);
-    res.status(500).json({
-      success: false,
-      message: 'Error retrieving public keys',
-      error: error.message
-    });
+    console.error('Error getting public keys:', error);
+    // Handle common errors
+    if (error.message.includes('User not registered')) {
+      return res.status(404).json({ success: false, message: 'User not registered' });
+    }
+    
+    if (error.message.includes('No public keys found') || error.message.includes('No active public key')) {
+      return res.status(404).json({ success: false, message: 'No active public key' });
+    }
+    
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
@@ -456,8 +489,9 @@ const createCertificate = async (req, res) => {
     console.log('Sending transaction to issue certificate...');
     
     try {
-      // Call the issueCertificate function in the contract
-      const tx = await userCertificateManagerContract.issueCertificate(
+      // Always use the admin wallet and issueCertificateFor
+      const tx = await userCertificateManagerContract.issueCertificateFor(
+        address, // Target user address
         serialNumber,
         country,
         state,
