@@ -11,6 +11,10 @@ const AdminDashboard = () => {
   const [currentFile, setCurrentFile] = useState('');
   const [systemStats, setSystemStats] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
+  const [usersLoading, setUsersLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +34,7 @@ const AdminDashboard = () => {
     
     fetchLogFiles();
     fetchSystemStats();
+    fetchUsers();
   }, [navigate]);
 
   const fetchLogFiles = async () => {
@@ -72,6 +77,48 @@ const AdminDashboard = () => {
       toast.error(error.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    setUsersLoading(true);
+    setSelectedUser(null);
+    setUserDetails(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/users`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) throw new Error('Failed to fetch users');
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error(error.message || 'Failed to fetch users');
+      setUsers([]);
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+
+  const fetchUserDetails = async (address) => {
+    setUserDetails(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/user/${address}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) throw new Error('Failed to fetch user details');
+      const data = await response.json();
+      setUserDetails(data.user || data);
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      toast.error(error.message || 'Failed to fetch user details');
+      setUserDetails(null);
     }
   };
 
@@ -186,6 +233,12 @@ const AdminDashboard = () => {
           >
             System Stats
           </button>
+          <button
+            className={`sidebar-btn ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => setActiveTab('users')}
+          >
+            Users
+          </button>
         </nav>
         
         <main className="admin-main">
@@ -213,6 +266,73 @@ const AdminDashboard = () => {
               <div className="log-viewer">
                 <h2>{currentFile || 'Select a log file'}</h2>
                 {renderLogContent()}
+              </div>
+            </div>
+          ) : activeTab === 'users' ? (
+            <div className="logs-container">
+              <div className="log-files">
+                <h2>Users</h2>
+                {usersLoading ? (
+                  <div className="loading">Loading users...</div>
+                ) : users && users.length > 0 ? (
+                  <div className="file-list">
+                    {users.map((user, idx) => (
+                      <div
+                        key={user.address}
+                        className={`file-item${selectedUser === user.address ? ' active' : ''}`}
+                        style={{ cursor: 'pointer', marginBottom: '0.5rem', padding: '0.75rem', borderRadius: '6px', background: selectedUser === user.address ? '#f3f4f6' : 'transparent' }}
+                        onClick={() => {
+                          setSelectedUser(user.address);
+                          fetchUserDetails(user.address);
+                        }}
+                      >
+                        <span className="file-name" style={{ fontWeight: 500 }}>{user.username || 'N/A'}</span>
+                        <span className="file-size" style={{ fontSize: '0.85em', color: '#888', marginLeft: 8 }}>{user.email || 'N/A'}</span>
+                        <span className="file-modified" style={{ display: 'block', fontFamily: 'monospace', fontSize: '0.85em', color: '#666' }}>{user.address}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="no-files">No users found</div>
+                )}
+              </div>
+              <div className="user-details-panel">
+                {selectedUser && userDetails ? (
+                  <>
+                    <h2>User Details</h2>
+                    <table className="user-details-table">
+                      <tbody>
+                        <tr>
+                          <th>Username</th>
+                          <td>{userDetails.username || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                          <th>Email</th>
+                          <td>{userDetails.email || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                          <th>Address</th>
+                          <td style={{fontFamily: 'monospace'}}>{userDetails.address}</td>
+                        </tr>
+                        <tr>
+                          <th>Registered</th>
+                          <td>{userDetails.isRegistered ? 'Yes' : 'No'}</td>
+                        </tr>
+                        <tr>
+                          <th>Public Key</th>
+                          <td style={{fontFamily: 'monospace'}}>{userDetails.publicKey || 'N/A'}</td>
+                        </tr>
+                        {/* Add more details as needed */}
+                      </tbody>
+                    </table>
+                    <button className="btn btn-close-details" style={{ width: 'fit-content', marginTop: '1.5rem' }} onClick={() => {
+                      setSelectedUser(null);
+                      setUserDetails(null);
+                    }}>Close</button>
+                  </>
+                ) : (
+                  <div className="no-content">Select a user to view details</div>
+                )}
               </div>
             </div>
           ) : (
