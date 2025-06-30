@@ -345,27 +345,43 @@ const Dashboard = () => {
                   </tbody>
                 </table>
               </div>
-              {/* Public Key Card */}
+              {/* Digital Certificate Overview Card */}
               <div className="card public-key-card">
                 <div className="card-header">
                   <h3>Digital Certificate Overview</h3>
-                  <button 
-                    onClick={handleDownloadKey}
-                    className="btn download-btn"
-                    title="Download Public Key"
-                  >
-                    <FaDownload /> Download
-                  </button>
                 </div>
-                <div className="public-key-container">
-                  <pre className="public-key">
-                    {publicKey || 'No public key found'}
-                  </pre>
-                  <CopyToClipboard text={publicKey} onCopy={handleCopyKey}>
-                    <button className="copy-btn">
-                      <FaCopy /> {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </CopyToClipboard>
+                <div className="certificate-overview-container">
+                  <table className="certificate-overview-table" style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 12 }}>
+                    <tbody>
+                      <tr>
+                        <th style={{ textAlign: 'left', padding: 8, border: '1px solid #e5e7eb', width: 180 }}>Certificate ID</th>
+                        <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{certificate?.serialNumber || 'Not Issued'}</td>
+                      </tr>
+                      <tr>
+                        <th style={{ textAlign: 'left', padding: 8, border: '1px solid #e5e7eb' }}>Certificate Public Key</th>
+                        <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ wordBreak: 'break-all' }}>{certificate?.publicKey || 'No public key found'}</span>
+                            <CopyToClipboard text={certificate?.publicKey || ''} onCopy={handleCopyKey}>
+                              <button className="copy-btn" style={{ marginLeft: 8 }}>
+                                <FaCopy /> {copied ? 'Copied!' : 'Copy'}
+                              </button>
+                            </CopyToClipboard>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th style={{ textAlign: 'left', padding: 8, border: '1px solid #e5e7eb' }}>Certificate Status</th>
+                        <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                          {certificate ? (
+                            <span className="status-badge active">Active</span>
+                          ) : (
+                            <span className="status-badge inactive">Not Issued</span>
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <div className="key-actions">
                   <button className="btn primary" onClick={() => setActiveSection('certificate')}>
