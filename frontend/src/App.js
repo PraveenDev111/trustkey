@@ -5,7 +5,6 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import RegisterUserMetaMask from './pages/RegisterUserMetaMask';
-import ContractUserList from './pages/ContractUserList';
 
 // A wrapper component that will check for authentication
 const ProtectedRoute = ({ children }) => {
@@ -59,10 +58,6 @@ function App() {
           } 
         />
         <Route path="/register" element={<RegisterUserMetaMask />} />
-        <Route 
-          path="/contract-users" 
-          element={<ContractUserList /> } 
-        />
       </Routes>
     </Router>
   );

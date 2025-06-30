@@ -589,3 +589,21 @@
   signatureVerification: 1 calls, avg 49.71ms
   jwtIssuance: 2 calls, avg 22.72ms
 
+{"timestamp":"2025-06-30 13:02:56","operation":"nonceGeneration","durationMs":168.83,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-06-30 13:03:00","operation":"sign","durationMs":11.06}
+{"timestamp":"2025-06-30 13:03:00","operation":"signatureVerification","durationMs":39.94,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":11.0556}}
+{"timestamp":"2025-06-30 13:03:00","operation":"jwtIssuance","durationMs":18.06,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":11.0556}}
+[2025-06-30 13:05:30] Performance Metrics:
+  nonceGeneration: 1 calls, avg 168.83ms
+  signatureVerification: 1 calls, avg 39.94ms
+  jwtIssuance: 2 calls, avg 14.56ms
+
+{"timestamp":"2025-06-30 14:21:45","operation":"nonceGeneration","durationMs":169.74,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-06-30 14:21:49","operation":"sign","durationMs":8.34}
+{"timestamp":"2025-06-30 14:21:49","operation":"signatureVerification","durationMs":95.26,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.3432}}
+{"timestamp":"2025-06-30 14:21:49","operation":"jwtIssuance","durationMs":19.5,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.3432}}
+[2025-06-30 14:23:42] Performance Metrics:
+  nonceGeneration: 1 calls, avg 169.74ms
+  signatureVerification: 1 calls, avg 95.26ms
+  jwtIssuance: 2 calls, avg 13.92ms
+

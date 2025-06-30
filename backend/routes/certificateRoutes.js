@@ -6,7 +6,8 @@ const {
   getUserPublicKeys,
   addPublicKey,
   deactivatePublicKey,
-  createCertificate
+  createCertificate,
+  getActivePublicKey
 } = require('../controllers/certificateController');
 
 // Debug route - no auth middleware
@@ -34,6 +35,16 @@ router.get('/certificates/:address', async (req, res, next) => {
   };
   next();
 }, getUserCertificate);
+
+// Route to get the active public key for a user
+router.get('/certificates/activekey/:address', async (req, res, next) => {
+  // Manually set a mock user for testing (or add auth middleware if needed)
+  req.user = {
+    address: req.params.address.toLowerCase(),
+    role: 'user' // or 'admin' if you want to restrict
+  };
+  next();
+}, getActivePublicKey);
 
 // Simplified routes for testing
 router.post('/certificates/:address/create', async (req, res, next) => {

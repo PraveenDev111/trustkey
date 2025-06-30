@@ -185,6 +185,44 @@ const getUserCertificate = async (req, res) => {
 
 /**
  * @desc    Revoke a user's certificate
+ * @route   POST /api/certificates/activekey/:address
+ * @access  Private/Admin
+ */
+// GET /api/certificates/activekey/:address
+const getActivePublicKey = async (req, res) => {
+  const address = req.params.address;
+  let publicKey = null;
+  try {
+    const keyBytes = await userCertificateManagerContract.getActivePublicKey(address);
+    // Handle different key formats
+    if (keyBytes) {
+      if (typeof keyBytes === 'string') {
+        publicKey = keyBytes;
+      } else if (keyBytes._isBigNumber) {
+        publicKey = '0x' + keyBytes.toHexString().substring(2);
+      } else if (keyBytes instanceof Uint8Array || Array.isArray(keyBytes)) {
+        const hex = Array.from(keyBytes)
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+        publicKey = '0x' + hex;
+      } else if (keyBytes.hex) {
+        publicKey = keyBytes.hex;
+      } else if (keyBytes.toString) {
+        publicKey = keyBytes.toString('hex');
+      }
+    }
+    if (!publicKey) {
+      return res.status(404).json({ success: false, message: 'No active public key found' });
+    }
+    return res.status(200).json({ success: true, publicKey });
+  } catch (error) {
+    console.error('Error getting active public key:', error);
+    return res.status(500).json({ success: false, message: 'Error retrieving active public key', error: error.message });
+  }
+};
+
+/**
+ * @desc    Revoke a user's certificate
  * @route   POST /api/certificates/revoke/:address
  * @access  Private/Admin
  */
@@ -329,13 +367,12 @@ const addPublicKey = async (req, res) => {
       });
     }
 
-    // Call the addPublicKey function in the contract
-    const tx = await userCertificateManagerContract.addPublicKey(keyData, { from: userAddress });
+    // Use admin wallet to add public key for user
+    // Only the admin can call addPublicKeyFor on the contract
+    const tx = await userCertificateManagerContract.addPublicKeyFor(userAddress, keyData);
     await tx.wait();
 
-    logAction('public_key_added', userAddress, {
-      keyLength: keyData.length
-    });
+    console.log(`Admin added public key for user ${userAddress} (key length: ${keyData.length})`);
 
     res.status(201).json({
       success: true,
@@ -586,5 +623,6 @@ module.exports = {
   getUserPublicKeys,
   addPublicKey,
   deactivatePublicKey,
-  createCertificate
+  createCertificate,
+  getActivePublicKey
 };

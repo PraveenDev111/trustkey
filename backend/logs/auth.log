@@ -185,3 +185,7 @@
 {"timestamp":"2025-06-30 10:46:34","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
 {"timestamp":"2025-06-30 10:46:44","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":20.8118}
 {"timestamp":"2025-06-30 10:47:36","type":"certificate_created","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","targetUser":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","serialNumber":"CERT-1751260610385"}
+{"timestamp":"2025-06-30 13:02:55","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-30 13:03:00","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":11.0556}
+{"timestamp":"2025-06-30 14:21:45","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-06-30 14:21:49","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.3432}

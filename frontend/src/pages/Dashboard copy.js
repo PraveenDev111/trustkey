@@ -26,7 +26,6 @@ const Dashboard = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
-  const [allPublicKeys, setAllPublicKeys] = useState([]);
   const navigate = useNavigate();
   
   // Check if current user is admin and fetch user data
@@ -128,37 +127,6 @@ const Dashboard = () => {
       }
     };
     fetchCertificateAndKey();
-  }, [userDetails.address]);
-  
-  // Fetch all public keys on mount and when userDetails.address changes
-  useEffect(() => {
-    const fetchAllPublicKeys = async () => {
-      try {
-        const address = userDetails.address;
-        if (!address) return;
-        const token = localStorage.getItem('token');
-        if (!token) return;
-        const response = await fetch(`${API_BASE_URL}/certificates/keys/${address}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && Array.isArray(data.publicKeys)) {
-            setAllPublicKeys(data.publicKeys);
-          } else {
-            setAllPublicKeys([]);
-          }
-        } else {
-          setAllPublicKeys([]);
-        }
-      } catch (err) {
-        setAllPublicKeys([]);
-      }
-    };
-    fetchAllPublicKeys();
   }, [userDetails.address]);
 
   const handleCopyKey = () => {
@@ -348,7 +316,7 @@ const Dashboard = () => {
               {/* Public Key Card */}
               <div className="card public-key-card">
                 <div className="card-header">
-                  <h3>Digital Certificate Overview</h3>
+                  <h3>Your Certificate Public Key</h3>
                   <button 
                     onClick={handleDownloadKey}
                     className="btn download-btn"
@@ -383,41 +351,6 @@ const Dashboard = () => {
                   <button className="btn secondary">
                     <FaCertificate /> Verify Signature
                   </button>
-                </div>
-              </div>
-              {/* All Public Keys Card */}
-              <div className="card public-key-list-card" style={{ width: '790px' }}>
-                <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ margin: 0 }}>All Public Keys</h3>
-                  <button style={{ maxWidth: 'fit-content' }} className="btn btn-primary" onClick={() => setActiveSection('publicKeys')} title="Open Public Key Manager">
-                    Manage Keys
-                  </button>
-                </div>
-                <div>
-                  <table className="public-key-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ background: '#f1f5f9' }}>
-                        <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Index</th>
-                        <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Public Key</th>
-                        <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Active</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {allPublicKeys && allPublicKeys.length > 0 ? (
-                        allPublicKeys.map((key, idx) => (
-                          <tr key={key.index} style={{ background: idx % 2 === 0 ? '#fff' : '#f9fafb' }}>
-                            <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{key.index}</td>
-                            <td style={{ padding: 8, border: '1px solid #e5e7eb', maxWidth: 240, wordBreak: 'break-all' }}>{key.keyData}</td>
-                            <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{key.isActive ? 'Yes' : 'No'}</td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={4} style={{ textAlign: 'center', padding: 16, color: '#64748b' }}>No public keys found.</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
                 </div>
               </div>
             </div>
