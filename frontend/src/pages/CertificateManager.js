@@ -7,7 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import '../styles/CertificateManager.css';
 
-const CertificateManager = ({ userAddress }) => {
+const CertificateManager = ({ userAddress, onCertificateUpdate }) => {
   const [certificate, setCertificate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -138,7 +138,12 @@ const CertificateManager = ({ userAddress }) => {
       if (response.data.success) {
         setCertificate(response.data.certificate);
         setShowCertificateForm(false);
+        setError(''); // Clear any previous error
         toast.success('Certificate created successfully!');
+        // Notify parent (Dashboard) of new certificate and public key
+        if (onCertificateUpdate && typeof onCertificateUpdate === 'function') {
+          onCertificateUpdate(response.data.certificate);
+        }
       }
     } catch (err) {
       console.error('Error creating certificate:', err);

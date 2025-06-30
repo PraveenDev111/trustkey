@@ -541,3 +541,27 @@
 {"timestamp":"2025-06-30 00:24:26","operation":"sign","durationMs":13.42}
 {"timestamp":"2025-06-30 00:24:26","operation":"signatureVerification","durationMs":91.85,"status":"success","type":"login","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":13.4164}}
 {"timestamp":"2025-06-30 00:24:26","operation":"jwtIssuance","durationMs":37.06,"status":"success","type":"login","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":13.4164}}
+[2025-06-30 00:26:24] Performance Metrics:
+  nonceGeneration: 1 calls, avg 100.18ms
+  signatureVerification: 1 calls, avg 91.85ms
+  jwtIssuance: 2 calls, avg 25.24ms
+
+{"timestamp":"2025-06-30 00:34:56","operation":"nonceGeneration","durationMs":54.95,"status":"success","type":"nonce_issued","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1"}
+{"timestamp":"2025-06-30 00:35:02","operation":"sign","durationMs":8.3}
+{"timestamp":"2025-06-30 00:35:02","operation":"signatureVerification","durationMs":56.96,"status":"success","type":"login","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.3001}}
+{"timestamp":"2025-06-30 00:35:02","operation":"jwtIssuance","durationMs":32.01,"status":"success","type":"login","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.3001}}
+[2025-06-30 03:35:52] Performance Metrics:
+  nonceGeneration: 1 calls, avg 54.95ms
+  signatureVerification: 1 calls, avg 56.96ms
+  jwtIssuance: 2 calls, avg 20.16ms
+
+{"timestamp":"2025-06-30 07:17:02","operation":"nonceGeneration","durationMs":192.25,"status":"success","type":"nonce_issued","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1"}
+{"timestamp":"2025-06-30 07:17:06","operation":"sign","durationMs":12.36}
+{"timestamp":"2025-06-30 07:17:06","operation":"signatureVerification","durationMs":37.85,"status":"success","type":"login","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":12.3625}}
+{"timestamp":"2025-06-30 07:17:06","operation":"jwtIssuance","durationMs":29.64,"status":"success","type":"login","address":"0x1e0012cc373fa1328c9b5fa271b65acecf020c70","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":12.3625}}
+[2025-06-30 07:21:03] Performance Metrics:
+  nonceGeneration: 1 calls, avg 192.25ms
+  signatureVerification: 1 calls, avg 37.85ms
+  jwtIssuance: 2 calls, avg 21.00ms
+
+{"timestamp":"2025-06-30 07:24:01","operation":"nonceGeneration","durationMs":55.58,"status":"failure","type":"login","address":"0x772170339f0230b033a5ef682f0950842fa14aa3","ip":"::1","metadata":{"reason":"unregistered_user","error":"missing revert data in call exception; Transaction reverted without a reason string [ See: https://links.ethers.org/v5-errors-CALL_EXCEPTION ] (data=\"0x\", transaction={\"from\":\"0x1e0012cc373FA1328C9b5fA271B65AcECF020c70\",\"to\":\"0x1a2882B2378F65e68A218BA555c5D60b7953d896\",\"data\":\"0xcc3d967b000000000000000000000000772170339f0230b033a5ef682f0950842fa14aa3\",\"accessList\":null}, error={\"reason\":\"processing response error\",\"code\":\"SERVER_ERROR\",\"body\":\"{\\\"id\\\":170,\\\"jsonrpc\\\":\\\"2.0\\\",\\\"error\\\":{\\\"message\\\":\\\"VM Exception while processing transaction: revert User not registered\\\",\\\"stack\\\":\\\"CallError: VM Exception while processing transaction: revert User not registered\\\\n    at Blockchain.simulateTransaction (C:\\\\\\\\Program Files\\\\\\\\WindowsApps\\\\\\\\GanacheUI_2.7.1.0_x64__rb4352f0jd4m2\\\\\\\\app\\\\\\\\resources\\\\\\\\static\\\\\\\\node\\\\\\\\node_modules\\\\\\\\ganache\\\\\\\\dist\\\\\\\\node\\\\\\\\1.js:2:72658)\\\",\\\"code\\\":-32000,\\\"name\\\":\\\"CallError\\\",\\\"data\\\":\\\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001355736572206e6f74207265676973746572656400000000000000000000000000\\\"}}\",\"error\":{\"code\":-32000,\"data\":\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001355736572206e6f74207265676973746572656400000000000000000000000000\"},\"requestBody\":\"{\\\"method\\\":\\\"eth_call\\\",\\\"params\\\":[{\\\"from\\\":\\\"0x1e0012cc373fa1328c9b5fa271b65acecf020c70\\\",\\\"to\\\":\\\"0x1a2882b2378f65e68a218ba555c5d60b7953d896\\\",\\\"data\\\":\\\"0xcc3d967b000000000000000000000000772170339f0230b033a5ef682f0950842fa14aa3\\\"},\\\"latest\\\"],\\\"id\\\":170,\\\"jsonrpc\\\":\\\"2.0\\\"}\",\"requestMethod\":\"POST\",\"url\":\"http://127.0.0.1:8545\"}, code=CALL_EXCEPTION, version=providers/5.7.2)"}}

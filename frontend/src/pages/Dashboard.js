@@ -8,7 +8,7 @@ import { FaCopy, FaDownload } from 'react-icons/fa';
 import CertificateManager from './CertificateManager';
 import '../styles/Dashboard.css';
 import '../styles/CertificateManager.css';
-import { ADMIN_ADDRESS } from '../config';
+import { ADMIN_ADDRESS, API_BASE_URL } from '../config';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -60,14 +60,6 @@ const Dashboard = () => {
                 email: data.user.email || 'Not provided',
                 address: data.user.address || userAddress
               });
-              
-              if (data.user.publicKey) {
-                setPublicKey(data.user.publicKey);
-              } else {
-                // Fallback to mock public key if not provided
-                const mockPublicKey = `-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA${userAddress.replace('0x', '')}\n-----END PUBLIC KEY-----`;
-                setPublicKey(mockPublicKey);
-              }
               return; // Exit early if successful
             }
           }
@@ -85,10 +77,6 @@ const Dashboard = () => {
           email,
           address: userAddress
         });
-        
-        // Set a mock public key based on the address
-        const mockPublicKey = `-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA${userAddress.replace('0x', '')}\n-----END PUBLIC KEY-----`;
-        setPublicKey(mockPublicKey);
       } catch (error) {
         console.error('Error fetching user data:', error);
         setError('Failed to load user data');
@@ -99,6 +87,46 @@ const Dashboard = () => {
 
     fetchUserData();
   }, [navigate]);
+
+  // Fetch certificate and public key on mount and when userDetails.address changes
+  useEffect(() => {
+    const fetchCertificateAndKey = async () => {
+      try {
+        const address = localStorage.getItem('userAddress');
+        if (!address) return;
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        // Fetch certificate details
+        const certRes = await fetch(`${API_BASE_URL}/certificates/${address}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (certRes.ok) {
+          const certData = await certRes.json();
+          if (certData.success && certData.hasCertificate && certData.data) {
+            setCertificate(certData.data);
+            if (certData.data.publicKey) {
+              setPublicKey(certData.data.publicKey);
+            } else {
+              setPublicKey('');
+            }
+          } else {
+            setCertificate(null);
+            setPublicKey('');
+          }
+        } else {
+          setCertificate(null);
+          setPublicKey('');
+        }
+      } catch (err) {
+        setCertificate(null);
+        setPublicKey('');
+      }
+    };
+    fetchCertificateAndKey();
+  }, [userDetails.address]);
 
   const handleCopyKey = () => {
     setCopied(true);
@@ -321,7 +349,15 @@ const Dashboard = () => {
               </div>
             </div>
           ) : (
-            <CertificateManager userAddress={userDetails.address} />
+             <CertificateManager 
+               userAddress={userDetails.address}
+               onCertificateUpdate={(newCert) => {
+                 setCertificate(newCert);
+                 if (newCert && newCert.publicKey) {
+                   setPublicKey(newCert.publicKey);
+                 }
+               }}
+             />
           )}
 
       </main>

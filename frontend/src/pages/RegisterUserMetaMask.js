@@ -4,9 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { initWeb3, initContract, web3Instance } from '../web3';
 import { Link } from 'react-router-dom';
 import logo from '../assets/trustkey2.png';
-import { ec as EC } from 'elliptic';
 import { CONTRACT_ADDRESS } from '../config';
-import { FaArrowLeft, FaKey, FaCopy, FaCheck } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
 import './RegisterUserMetaMask.css';
 
 const RegisterUserMetaMask = () => {
