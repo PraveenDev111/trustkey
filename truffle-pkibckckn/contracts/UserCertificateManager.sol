@@ -59,37 +59,17 @@ contract UserCertificateManager {
 
     function registerUser(
         string memory email,
-        string memory username,
-        bytes memory publicKey
+        string memory username
     ) public {
         require(bytes(email).length > 0, "Email cannot be empty");
         require(bytes(username).length > 0, "Username cannot be empty");
-        // No longer require publicKey to register a user
         require(!users[msg.sender].exists, "User already registered");
-        require(
-            publicKeyToAddress[publicKey] == address(0),
-            "Public key already registered"
-        );
-
         users[msg.sender] = User({
             exists: true,
             username: username,
             email: email
         });
-
-        publicKeyToAddress[publicKey] = msg.sender; // Still map for initial key, if provided
         registeredUsers.push(msg.sender);
-
-        // Add the public key to the keys array
-        userPublicKeys[msg.sender].push(
-            PublicKey({
-                keyData: publicKey,
-                isActive: true,
-                addedAt: block.timestamp
-            })
-        );
-        activeKeyIndex[msg.sender] = 0;
-
         emit UserRegistered(msg.sender, email, username);
     }
 

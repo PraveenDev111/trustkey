@@ -75,8 +75,7 @@ const RegisterUserMetaMask = () => {
         gasLimit: web3Instance.utils.toHex(300000),
         data: contract.methods.registerUser(
           email, 
-          username, 
-          [] // empty bytes for publicKey, or remove param if contract signature changed
+          username
         ).encodeABI()
       };
       try {
@@ -84,7 +83,7 @@ const RegisterUserMetaMask = () => {
         // First, estimate gas
         const gasEstimate = await contract.methods.registerUser(
           email, 
-          username,[]
+          username
         ).estimateGas({ from: metaMaskAccount });
         
         console.log('Estimated gas:', gasEstimate);
@@ -106,7 +105,7 @@ const RegisterUserMetaMask = () => {
           gasLimit: gasLimitHex,
           data: contract.methods.registerUser(
             email, 
-            username,[]
+            username
           ).encodeABI()
         };
         
