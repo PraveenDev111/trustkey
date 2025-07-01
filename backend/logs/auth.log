@@ -197,3 +197,12 @@
 {"timestamp":"2025-06-30 17:31:54","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":6.8548}
 {"timestamp":"2025-06-30 17:32:15","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
 {"timestamp":"2025-06-30 17:32:19","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":18.6964}
+{"timestamp":"2025-06-30 17:35:00","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-01 00:00:46","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-01 00:00:51","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":15.9232}
+{"timestamp":"2025-07-01 08:44:54","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-01 08:45:08","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":131.2011}
+{"timestamp":"2025-07-01 10:17:54","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-01 10:17:59","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":9.9461}
+{"timestamp":"2025-07-01 10:19:21","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-01 10:19:26","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.8413}
