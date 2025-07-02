@@ -1,0 +1,2 @@
+{"timestamp":"2025-07-02T15:04:18.704Z","action":"public_key_addition_started","userAddress":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","keyType":"RSA","publicKeyPrefix":"0xB3e7A2B9649CCf6EEe..."}
+{"timestamp":"2025-07-02T15:04:25.364Z","action":"public_key_deactivation_started","userAddress":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","keyIndex":0}

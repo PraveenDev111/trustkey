@@ -271,3 +271,9 @@
 {"timestamp":"2025-07-02 17:42:29","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":36.7736}
 {"timestamp":"2025-07-02 17:43:06","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
 {"timestamp":"2025-07-02 17:43:11","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":16.9613}
+{"timestamp":"2025-07-02 20:13:20","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-02 20:13:25","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.5298}
+{"timestamp":"2025-07-02 20:14:00","type":"certificate_created","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","status":"success","ip":"::1","targetUser":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","serialNumber":"CERT-1751467409445"}
+{"timestamp":"2025-07-02 20:15:20","type":"nonce_issued","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","status":"pending","ip":"::1"}
+{"timestamp":"2025-07-02 20:15:26","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","status":"success","ip":"::1","tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.3613}
+{"timestamp":"2025-07-02 20:15:54","type":"certificate_created","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","status":"success","ip":"::1","targetUser":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","serialNumber":"CERT-1751467528769"}

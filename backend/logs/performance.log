@@ -862,3 +862,26 @@
 {"timestamp":"2025-07-02 17:43:11","operation":"sign","durationMs":16.96}
 {"timestamp":"2025-07-02 17:43:11","operation":"signatureVerification","durationMs":101.1,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":16.9613}}
 {"timestamp":"2025-07-02 17:43:11","operation":"jwtIssuance","durationMs":86.24,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":16.9613}}
+[2025-07-02 20:08:46] Performance Metrics:
+  nonceGeneration: 3 calls, avg 139.48ms
+  signatureVerification: 2 calls, avg 209.74ms
+  jwtIssuance: 4 calls, avg 54.92ms
+
+{"timestamp":"2025-07-02 20:13:20","operation":"nonceGeneration","durationMs":57.35,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-02 20:13:25","operation":"sign","durationMs":5.53}
+{"timestamp":"2025-07-02 20:13:25","operation":"signatureVerification","durationMs":37.3,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.5298}}
+{"timestamp":"2025-07-02 20:13:25","operation":"jwtIssuance","durationMs":23.43,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.5298}}
+[2025-07-02 20:13:46] Performance Metrics:
+  nonceGeneration: 1 calls, avg 57.35ms
+  signatureVerification: 1 calls, avg 37.30ms
+  jwtIssuance: 2 calls, avg 14.48ms
+
+{"timestamp":"2025-07-02 20:15:20","operation":"nonceGeneration","durationMs":99,"status":"success","type":"nonce_issued","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1"}
+{"timestamp":"2025-07-02 20:15:26","operation":"sign","durationMs":5.36}
+{"timestamp":"2025-07-02 20:15:26","operation":"signatureVerification","durationMs":33.52,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.3613}}
+{"timestamp":"2025-07-02 20:15:26","operation":"jwtIssuance","durationMs":18.22,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.3613}}
+[2025-07-02 20:18:46] Performance Metrics:
+  nonceGeneration: 1 calls, avg 99.00ms
+  signatureVerification: 1 calls, avg 33.52ms
+  jwtIssuance: 2 calls, avg 11.79ms
+

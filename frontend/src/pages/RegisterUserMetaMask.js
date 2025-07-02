@@ -7,6 +7,8 @@ import logo from '../assets/trustkey2.png';
 import { CONTRACT_ADDRESS } from '../config';
 import { FaArrowLeft } from 'react-icons/fa';
 import './RegisterUserMetaMask.css';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const RegisterUserMetaMask = () => {
   const [email, setEmail] = useState('');
@@ -141,6 +143,19 @@ const RegisterUserMetaMask = () => {
       // Reset form
       setEmail('');
       setUsername('');
+      // Log the registration
+      try {
+        await axios.post(`${API_BASE_URL}/log-registration`, {
+          email,
+          username,
+          address: metaMaskAccount,
+          timestamp: new Date().toISOString()
+        });
+      } catch (logError) {
+        console.error('Failed to log registration:', logError);
+        // Don't fail the registration if logging fails
+      }
+      
       alert('Registration successful!');
     } catch (error) {
       console.error('Registration failed - Full error:', {

@@ -63,6 +63,7 @@ router.post('/certificates/revoke/:address', async (req, res, next) => {
   };
   next();
 }, revokeCertificate);
+
 router.get('/certificates/keys/:address', async (req, res, next) => {
   // Manually set a mock user for testing
   req.user = {

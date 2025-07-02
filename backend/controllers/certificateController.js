@@ -1,6 +1,37 @@
 const { ethers } = require('ethers');
 const { userCertificateManagerContract, wallet, provider } = require('../utils/web3');
 const { logAuthAttempt, logAction } = require('../utils/logger');
+const fs = require('fs');
+const path = require('path');
+
+// Log directory path
+const LOG_DIR = path.join(__dirname, '../logs');
+const CERT_ACTIONS_LOG = path.join(LOG_DIR, 'certificate_actions.log');
+
+// Ensure log directory exists
+if (!fs.existsSync(LOG_DIR)) {
+  fs.mkdirSync(LOG_DIR, { recursive: true });
+}
+
+/**
+ * Logs certificate actions to both file and console
+ * @param {string} action - The action being performed
+ * @param {object} data - Action-specific data to log
+ */
+const logCertificateAction = (action, data) => {
+  const timestamp = new Date().toISOString();
+  const logEntry = {
+    timestamp,
+    action,
+    ...data
+  };
+  
+  // Log to file
+  fs.appendFileSync(CERT_ACTIONS_LOG, JSON.stringify(logEntry) + '\n');
+  
+  // Also log to console for debugging
+  console.log(`[${timestamp}] Certificate Action - ${action}:`, data);
+};
 
 /**
  * @desc    Get certificate for a user
@@ -71,14 +102,14 @@ const getUserCertificate = async (req, res) => {
         isRevoked
       ] = await userCertificateManagerContract.getCertificateInfo(address);
       
-      console.log('Certificate data received:', {
+      /*console.log('Certificate data received:', {
         serialNumber,
         commonName,
         organization,
         validFrom: validFrom ? validFrom.toString() : null,
         validTo: validTo ? validTo.toString() : null,
         isRevoked
-      });
+      });*/
       
       // If no certificate exists
       if (!serialNumber || serialNumber === '') {
@@ -230,6 +261,14 @@ const revokeCertificate = async (req, res) => {
   const { address } = req.params;
   const { reason = 'No reason provided' } = req.body;
   const adminAddress = req.user.address;
+  const ip = req.ip;
+
+  logCertificateAction('certificate_revocation_requested', {
+    targetAddress: address,
+    requestedBy: adminAddress,
+    ip,
+    reason
+  });
 
   try {
     // Check if user exists and has a certificate
@@ -256,10 +295,13 @@ const revokeCertificate = async (req, res) => {
       const receipt = await tx.wait();
 
       // Log the action
-      logAction('certificate_revoked', adminAddress, {
+      logCertificateAction('certificate_revoked', {
         targetAddress: address,
+        performedBy: adminAddress,
+        ip: ip,
         reason: reason,
-        transactionHash: receipt.transactionHash
+        transactionHash: receipt.transactionHash,
+        timestamp: new Date().toISOString()
       });
 
       return res.status(200).json({
@@ -290,6 +332,7 @@ const revokeCertificate = async (req, res) => {
     });
   }
 };
+
 /**
  * @desc    Get user's active public key
  * @route   GET /api/certificates/keys/:address
@@ -366,6 +409,14 @@ const addPublicKey = async (req, res) => {
   try {
     const { keyData } = req.body;
     const userAddress = req.user.address;
+    const ip = req.ip;
+
+    logCertificateAction('public_key_addition_started', {
+      userAddress,
+      ip,
+      keyType: 'RSA',
+      publicKeyPrefix: keyData ? `${keyData.substring(0, 20)}...` : 'undefined'
+    });
 
     if (!keyData) {
       return res.status(400).json({
@@ -406,6 +457,13 @@ const deactivatePublicKey = async (req, res) => {
   try {
     const { keyIndex } = req.params;
     const userAddress = req.user.address;
+    const ip = req.ip;
+
+    logCertificateAction('public_key_deactivation_started', {
+      userAddress,
+      ip,
+      keyIndex: parseInt(keyIndex)
+    });
 
     // Call the deactivatePublicKey function in the contract
     const tx = await userCertificateManagerContract.deactivatePublicKey(parseInt(keyIndex), { from: userAddress });
