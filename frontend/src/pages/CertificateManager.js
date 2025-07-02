@@ -408,21 +408,7 @@ const CertificateManager = ({ userAddress, onCertificateUpdate }) => {
               >
                 <FaDownload /> Download Certificate
               </button>
-              
-              {!certificate.isRevoked && (
-                <button 
-                  className="btn danger"
-                  onClick={() => {
-                    // TODO: Implement certificate revocation
-                    if (window.confirm('Are you sure you want to revoke this certificate? This action cannot be undone.')) {
-                      // Call revokeCertificate method
-                      setCertificate(prev => ({ ...prev, isRevoked: true }));
-                    }
-                  }}
-                >
-                  Revoke Certificate
-                </button>
-              )}
+
             </div>
             
             <div className="certificate-note">

@@ -188,33 +188,23 @@ contract UserCertificateManager {
         emit PublicKeyAdded(user, string(_keyData));
     }
 
-    function deactivatePublicKey(uint256 _keyIndex) external {
+    function revokeCertificate(string memory _reason) external {
         require(users[msg.sender].exists, "User not registered");
         require(
-            _keyIndex < userPublicKeys[msg.sender].length,
-            "Invalid key index"
+            bytes(userCertificates[msg.sender].serialNumber).length != 0,
+            "No certificate found"
         );
         require(
-            userPublicKeys[msg.sender][_keyIndex].isActive,
-            "Key already inactive"
-        );
-        require(
-            userPublicKeys[msg.sender].length > 1,
-            "Cannot deactivate the only key"
+            !userCertificates[msg.sender].isRevoked,
+            "Certificate already revoked"
         );
 
-        userPublicKeys[msg.sender][_keyIndex].isActive = false;
-
-        if (activeKeyIndex[msg.sender] == _keyIndex) {
-            for (uint256 i = 0; i < userPublicKeys[msg.sender].length; i++) {
-                if (i != _keyIndex && userPublicKeys[msg.sender][i].isActive) {
-                    activeKeyIndex[msg.sender] = i;
-                    break;
-                }
-            }
+        userCertificates[msg.sender].isRevoked = true;
+        for (uint256 i = 0; i < userPublicKeys[msg.sender].length; i++) {
+            userPublicKeys[msg.sender][i].isActive = false;
         }
 
-        emit PublicKeyDeactivated(msg.sender, _keyIndex);
+        emit CertificateRevoked(msg.sender, _reason);
     }
 
     // ADMIN: Deactivate public key for any user
@@ -235,25 +225,28 @@ contract UserCertificateManager {
         emit PublicKeyDeactivated(user, _keyIndex);
     }
 
-    function revokeCertificate(string memory _reason) external {
-        require(users[msg.sender].exists, "User not registered");
+    function revokeCertificate(address _user, string memory _reason) external {
+        // Allow admin or the user themselves to revoke
+        require(msg.sender == _user, "Not authorized: Only user can revoke");
+        
+        require(users[_user].exists, "User not registered");
         require(
-            bytes(userCertificates[msg.sender].serialNumber).length != 0,
+            bytes(userCertificates[_user].serialNumber).length != 0,
             "No certificate found"
         );
         require(
-            !userCertificates[msg.sender].isRevoked,
+            !userCertificates[_user].isRevoked,
             "Certificate already revoked"
         );
 
-        userCertificates[msg.sender].isRevoked = true;
+        userCertificates[_user].isRevoked = true;
 
         // Deactivate all public keys
-        for (uint256 i = 0; i < userPublicKeys[msg.sender].length; i++) {
-            userPublicKeys[msg.sender][i].isActive = false;
+        for (uint256 i = 0; i < userPublicKeys[_user].length; i++) {
+            userPublicKeys[_user][i].isActive = false;
         }
 
-        emit CertificateRevoked(msg.sender, _reason);
+        emit CertificateRevoked(_user, _reason);
     }
 
     // View Functions
