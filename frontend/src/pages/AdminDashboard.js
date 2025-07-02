@@ -3,6 +3,186 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { API_BASE_URL, ADMIN_ADDRESS } from '../config';
 import '../styles/AdminDashboard.css';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, BarChart, Bar, AreaChart, Area } from 'recharts';
+
+// Log Stats Section Component (mock data)
+const LogStatsSection = () => {
+  // Performance logs mock
+  const perfRequestsPerMin = [
+    { time: '10:00', count: 120 }, { time: '10:01', count: 130 }, { time: '10:02', count: 110 }, { time: '10:03', count: 140 }, { time: '10:04', count: 90 }
+  ];
+  const perfTopEndpoints = [
+    { endpoint: '/api/auth/login', count: 200 },
+    { endpoint: '/api/certificates', count: 150 },
+    { endpoint: '/api/auth/user', count: 120 },
+    { endpoint: '/api/admin/logs', count: 80 }
+  ];
+
+  // Auth logs mock
+  const authAttemptsOverTime = [
+    { time: '10:00', success: 20, fail: 5 },
+    { time: '10:05', success: 24, fail: 2 },
+    { time: '10:10', success: 18, fail: 7 },
+    { time: '10:15', success: 30, fail: 1 },
+    { time: '10:20', success: 25, fail: 3 }
+  ];
+  const authOutcomePie = [
+    { name: 'Success', value: 117 },
+    { name: 'Failure', value: 18 },
+    { name: 'Locked Out', value: 3 }
+  ];
+
+  return (
+    <div style={{padding:'2rem', maxHeight:'80vh', overflowY:'auto'}}>
+      <h1 style={{fontWeight:700, fontSize:'2rem', marginBottom:'2rem', letterSpacing:'-1px', color:'#222'}}>Log Stats</h1>
+      <div style={{display:'flex', gap:'2.5rem', flexWrap:'wrap', marginBottom:'2.5rem'}}>
+        {/* Performance Log Charts */}
+        <div style={{flex:1, minWidth:340, background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem'}}>
+          <div style={{fontWeight:600, marginBottom:'1.2rem', color:'#444'}}>Requests Per Minute</div>
+          <ResponsiveContainer width="100%" height={180}>
+            <LineChart data={perfRequestsPerMin} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Line type="monotone" dataKey="count" stroke="#1976d2" strokeWidth={3} dot={{r:3}} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{flex:1, minWidth:340, background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem'}}>
+          <div style={{fontWeight:600, marginBottom:'1.2rem', color:'#444'}}>Top Endpoints</div>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={perfTopEndpoints} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" allowDecimals={false} />
+              <YAxis type="category" dataKey="endpoint" width={120} />
+              <Tooltip />
+              <Bar dataKey="count" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      <div style={{display:'flex', gap:'2.5rem', flexWrap:'wrap'}}>
+        {/* Auth Log Charts */}
+        <div style={{flex:1, minWidth:340, background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem'}}>
+          <div style={{fontWeight:600, marginBottom:'1.2rem', color:'#444'}}>Login Attempts Over Time</div>
+          <ResponsiveContainer width="100%" height={180}>
+            <AreaChart data={authAttemptsOverTime}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Area type="monotone" dataKey="success" stackId="1" stroke="#4caf50" fill="#c8e6c9" name="Success" />
+              <Area type="monotone" dataKey="fail" stackId="1" stroke="#f44336" fill="#ffcdd2" name="Failure" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{flex:1, minWidth:340, background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem'}}>
+          <div style={{fontWeight:600, marginBottom:'1.2rem', color:'#444'}}>Login Outcome Distribution</div>
+          <ResponsiveContainer width="100%" height={180}>
+            <PieChart>
+              <Pie data={authOutcomePie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} label>
+                {authOutcomePie.map((entry, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Overview Section Component
+const COLORS = ['#4caf50', '#f44336', '#9e9e9e'];
+const OverviewSection = ({ users, certificates, publicKeys, userStats }) => {
+  // Calculate summary numbers
+  const totalUsers = users.length;
+  const activeCerts = certificates.filter(c => c && !c.isRevoked).length;
+  const revokedCerts = certificates.filter(c => c && c.isRevoked).length;
+  const totalCerts = certificates.filter(c => c).length;
+  const totalKeys = publicKeys.length;
+
+  // Pie chart data
+  const certPieData = [
+    { name: 'Issued', value: activeCerts },
+    { name: 'Revoked', value: revokedCerts },
+    { name: 'Not Issued', value: totalUsers - totalCerts }
+  ];
+
+  // Line chart data (recent registrations, mock for now)
+  const regLineData = userStats && userStats.recentRegistrations
+    ? userStats.recentRegistrations
+    : [
+      { date: '2025-06-25', count: 2 },
+      { date: '2025-06-26', count: 4 },
+      { date: '2025-06-27', count: 3 },
+      { date: '2025-06-28', count: 5 },
+      { date: '2025-06-29', count: 1 },
+      { date: '2025-06-30', count: 6 },
+      { date: '2025-07-01', count: 2 },
+    ];
+
+  return (
+    <div className="overview-section" style={{padding:'5px', maxHeight:'80vh', overflowY:'auto'}}>
+      <div style={{
+        display: 'flex',
+        gap: '1.5rem',
+        marginBottom: '2.5rem',
+        padding: '2px',
+        flexWrap: 'wrap',
+        overflowX: 'none',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        minWidth: 0
+      }}>
+        <div className="overview-card" style={{background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem', minWidth:220, flex:1}}>
+          <div style={{fontSize:'1.1rem', color:'#888'}}>Total Users</div>
+          <div style={{fontSize:'2.5rem', fontWeight:700, color:'#1976d2'}}>{totalUsers}</div>
+        </div>
+        <div className="overview-card" style={{background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem', minWidth:220, flex:1}}>
+          <div style={{fontSize:'1.1rem', color:'#888'}}>Active Certificates</div>
+          <div style={{fontSize:'2.5rem', fontWeight:700, color:'#4caf50'}}>{activeCerts}</div>
+        </div>
+        <div className="overview-card" style={{background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem', minWidth:220, flex:1}}>
+          <div style={{fontSize:'1.1rem', color:'#888'}}>Revoked Certificates</div>
+          <div style={{fontSize:'2.5rem', fontWeight:700, color:'#f44336'}}>{revokedCerts}</div>
+        </div>
+        <div className="overview-card" style={{background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem', minWidth:220, flex:1}}>
+          <div style={{fontSize:'1.1rem', color:'#888'}}>Total Public Keys</div>
+          <div style={{fontSize:'2.5rem', fontWeight:700, color:'#222'}}>{totalKeys}</div>
+        </div>
+      </div>
+      <div style={{display:'flex', gap:'2.5rem', flexWrap:'wrap'}}>
+        <div style={{flex:1, minWidth:320, background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem'}}>
+          <div style={{fontWeight:600, marginBottom:'1.2rem', color:'#444'}}>Certificate Status Distribution</div>
+          <ResponsiveContainer width="100%" height={240}>
+            <PieChart>
+              <Pie data={certPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                {certPieData.map((entry, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{flex:2, minWidth:400, background:'#fff', borderRadius:12, boxShadow:'0 2px 12px #e0e0e0', padding:'2rem'}}>
+          <div style={{fontWeight:600, marginBottom:'1.2rem', color:'#444'}}>Recent User Registrations</div>
+          <ResponsiveContainer width="100%" height={240}>
+            <LineChart data={regLineData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Line type="monotone" dataKey="count" stroke="#1976d2" strokeWidth={3} dot={{r:4}} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AdminDashboard = () => {
   const [showUsersMenu, setShowUsersMenu] = useState(false);
@@ -79,6 +259,9 @@ const AdminDashboard = () => {
   const [systemStats, setSystemStats] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
+  const [overviewCertificates, setOverviewCertificates] = useState([]); // for overview
+  const [overviewPublicKeys, setOverviewPublicKeys] = useState([]); // for overview
+  const [overviewUserStats, setOverviewUserStats] = useState(null); // for overview
   const [selectedUser, setSelectedUser] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [userCertificate, setUserCertificate] = useState(null);
@@ -106,6 +289,7 @@ const AdminDashboard = () => {
     fetchLogFiles();
     fetchSystemStats();
     fetchUsers();
+    fetchOverviewData();
   }, [navigate]);
 
   const fetchLogFiles = async () => {
@@ -239,6 +423,57 @@ const AdminDashboard = () => {
   };
 
 
+  // Fetch all data needed for overview section
+  const fetchOverviewData = async () => {
+    try {
+      // Users
+      const usersRes = await fetch(`${API_BASE_URL}/auth/users`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      const usersData = usersRes.ok ? await usersRes.json() : [];
+      setUsers(usersData);
+
+      // Certificates (for all users)
+      const certs = await Promise.all(
+        (usersData || []).map(async (u) => {
+          try {
+            const res = await fetch(`${API_BASE_URL}/certificates/${u.address}`, {
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (!res.ok) return null;
+            const data = await res.json();
+            return data && data.success && data.hasCertificate && data.data ? data.data : null;
+          } catch {
+            return null;
+          }
+        })
+      );
+      setOverviewCertificates(certs);
+
+      // All public keys (flattened)
+      let allKeys = [];
+      for (const u of usersData || []) {
+        try {
+          const res = await fetch(`${API_BASE_URL}/certificates/keys/${u.address}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.publicKeys)) {
+            allKeys = allKeys.concat(data.publicKeys);
+          }
+        } catch {}
+      }
+      setOverviewPublicKeys(allKeys);
+
+      // User stats (recent registrations, etc.)
+      // This is a placeholder; you can enhance it to fetch from backend if available
+      setOverviewUserStats(null);
+    } catch (err) {
+      // fail silently for overview
+    }
+  };
+
   const fetchSystemStats = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/admin/stats`, {
@@ -339,6 +574,18 @@ const AdminDashboard = () => {
       <div className="admin-container">
         <nav className="admin-sidebar">
           <button 
+            className={`sidebar-btn ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            Overview
+          </button>
+          <button 
+            className={`sidebar-btn ${activeTab === 'logstats' ? 'active' : ''}`}
+            onClick={() => setActiveTab('logstats')}
+          >
+            Log Stats
+          </button>
+          <button 
             className={`sidebar-btn ${activeTab === 'logs' ? 'active' : ''}`}
             onClick={() => setActiveTab('logs')}
           >
@@ -358,8 +605,17 @@ const AdminDashboard = () => {
           </button>
         </nav>
         
-        <main className="admin-main">
-          {activeTab === 'logs' ? (
+        <main className="admin-main" style={{overflow:'hidden', height:'100%'}}>
+          {activeTab === 'overview' ? (
+            <OverviewSection
+              users={users}
+              certificates={overviewCertificates}
+              publicKeys={overviewPublicKeys}
+              userStats={overviewUserStats}
+            />
+          ) : activeTab === 'logstats' ? (
+            <LogStatsSection />
+          ) : activeTab === 'logs' ? (
             <div className="logs-container">
               <div className="log-files">
                 <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>

@@ -192,6 +192,7 @@ const CertificateManager = ({ userAddress, onCertificateUpdate }) => {
             className="btn primary" 
             onClick={() => setShowCertificateForm(true)}
             disabled={loading}
+            style={{ width: "fit-content"}}
           >
             <FaPlus /> Create Certificate
           </button>
@@ -403,6 +404,7 @@ const CertificateManager = ({ userAddress, onCertificateUpdate }) => {
               <button 
                 className="btn primary"
                 onClick={downloadCertificate}
+                style={{width: "fit-content"}}
               >
                 <FaDownload /> Download Certificate
               </button>
@@ -430,7 +432,7 @@ const CertificateManager = ({ userAddress, onCertificateUpdate }) => {
         </div>
       ) : (
         <div className="no-certificate">
-          <div className="info-card">
+          <div className="info-card" style={{ width: "fit-content"}}>
             <FaCertificate className="info-icon" />
             <h3>No Certificate Found</h3>
             <p>You haven't created a digital certificate yet. Click the button below to create one.</p>

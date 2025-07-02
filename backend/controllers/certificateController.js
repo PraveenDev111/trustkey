@@ -1,6 +1,6 @@
 const { ethers } = require('ethers');
 const { userCertificateManagerContract, wallet, provider } = require('../utils/web3');
-const { logAuthAttempt } = require('../utils/logger');
+const { logAuthAttempt, logAction } = require('../utils/logger');
 
 /**
  * @desc    Get certificate for a user
@@ -227,18 +227,11 @@ const getActivePublicKey = async (req, res) => {
  * @access  Private/Admin
  */
 const revokeCertificate = async (req, res) => {
+  const { address } = req.params;
+  const { reason = 'No reason provided' } = req.body;
+  const adminAddress = req.user.address;
+
   try {
-    const { address } = req.params;
-    const { reason = 'No reason provided' } = req.body;
-
-    // Only admins can revoke certificates
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to revoke certificates'
-      });
-    }
-
     // Check if user exists and has a certificate
     const isRegistered = await userCertificateManagerContract.isUserRegistered(address);
     if (!isRegistered) {
@@ -248,41 +241,55 @@ const revokeCertificate = async (req, res) => {
       });
     }
 
-    const [serialNumber] = await userCertificateManagerContract.getCertificateInfo(address);
-    if (serialNumber === '') {
-      return res.status(400).json({
-        success: false,
-        message: 'User does not have a certificate to revoke'
+    // Use a safe default gas limit
+    const DEFAULT_GAS_LIMIT = 300000;
+
+    try {
+      // Attempt the transaction with default gas limit
+      const tx = await userCertificateManagerContract.revokeCertificate(
+        address,
+        {
+          gasLimit: DEFAULT_GAS_LIMIT
+        }
+      );
+
+      const receipt = await tx.wait();
+
+      // Log the action
+      logAction('certificate_revoked', adminAddress, {
+        targetAddress: address,
+        reason: reason,
+        transactionHash: receipt.transactionHash
       });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Certificate revoked successfully',
+        transactionHash: receipt.transactionHash
+      });
+
+    } catch (error) {
+      // Handle specific errors
+      if (error.message.includes('revert')) {
+        const revertMessage = error.message.match(/revert\s+([^"]+)/);
+        return res.status(400).json({
+          success: false,
+          message: `Smart contract error: ${revertMessage ? revertMessage[1] : 'Unknown revert reason'}`,
+          error: error.message
+        });
+      }
+      throw error;
     }
 
-    // Call the revoke function in the contract
-    const tx = await userCertificateManagerContract.revokeCertificate(reason);
-    await tx.wait();
-
-    logAction('certificate_revoked', req.user.address, {
-      targetUser: address,
-      reason
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'Certificate revoked successfully',
-      data: {
-        userAddress: address,
-        revokedAt: new Date().toISOString()
-      }
-    });
   } catch (error) {
-    console.error(`Error revoking certificate for user ${req.params.address}:`, error);
-    res.status(500).json({
+    console.error(`Error revoking certificate for user ${address}:`, error);
+    return res.status(500).json({
       success: false,
-      message: 'Error revoking certificate',
+      message: 'Failed to revoke certificate',
       error: error.message
     });
   }
 };
-
 /**
  * @desc    Get user's active public key
  * @route   GET /api/certificates/keys/:address
@@ -373,7 +380,6 @@ const addPublicKey = async (req, res) => {
     await tx.wait();
 
     console.log(`Admin added public key for user ${userAddress} (key length: ${keyData.length})`);
-
     res.status(201).json({
       success: true,
       message: 'Public key added successfully',

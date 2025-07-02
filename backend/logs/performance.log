@@ -670,3 +670,182 @@
 {"timestamp":"2025-07-01 10:19:26","operation":"sign","durationMs":4.84}
 {"timestamp":"2025-07-01 10:19:26","operation":"signatureVerification","durationMs":44.26,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.8413}}
 {"timestamp":"2025-07-01 10:19:26","operation":"jwtIssuance","durationMs":17.63,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.8413}}
+[2025-07-01 10:24:16] Performance Metrics:
+  nonceGeneration: 1 calls, avg 34.83ms
+  signatureVerification: 1 calls, avg 44.26ms
+  jwtIssuance: 2 calls, avg 11.24ms
+
+{"timestamp":"2025-07-01 10:46:10","operation":"nonceGeneration","durationMs":232.97,"status":"failure","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"reason":"unregistered_user","error":"missing revert data in call exception; Transaction reverted without a reason string [ See: https://links.ethers.org/v5-errors-CALL_EXCEPTION ] (data=\"0x\", transaction={\"from\":\"0xA3e7A2B9649CCf6EEeA26a2b8fCFDFcfd8eD0125\",\"to\":\"0xA645a24c47A2b8bE1A02b2A3a8df52Dd8EA6587f\",\"data\":\"0xcc3d967b000000000000000000000000acad6cc6578aef79fdc74f9d5db34439f9820ade\",\"accessList\":null}, error={\"reason\":\"processing response error\",\"code\":\"SERVER_ERROR\",\"body\":\"{\\\"id\\\":684,\\\"jsonrpc\\\":\\\"2.0\\\",\\\"error\\\":{\\\"message\\\":\\\"VM Exception while processing transaction: revert User not registered\\\",\\\"stack\\\":\\\"CallError: VM Exception while processing transaction: revert User not registered\\\\n    at Blockchain.simulateTransaction (C:\\\\\\\\Program Files\\\\\\\\WindowsApps\\\\\\\\GanacheUI_2.7.1.0_x64__rb4352f0jd4m2\\\\\\\\app\\\\\\\\resources\\\\\\\\static\\\\\\\\node\\\\\\\\node_modules\\\\\\\\ganache\\\\\\\\dist\\\\\\\\node\\\\\\\\1.js:2:72658)\\\",\\\"code\\\":-32000,\\\"name\\\":\\\"CallError\\\",\\\"data\\\":\\\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001355736572206e6f74207265676973746572656400000000000000000000000000\\\"}}\",\"error\":{\"code\":-32000,\"data\":\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001355736572206e6f74207265676973746572656400000000000000000000000000\"},\"requestBody\":\"{\\\"method\\\":\\\"eth_call\\\",\\\"params\\\":[{\\\"from\\\":\\\"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125\\\",\\\"to\\\":\\\"0xa645a24c47a2b8be1a02b2a3a8df52dd8ea6587f\\\",\\\"data\\\":\\\"0xcc3d967b000000000000000000000000acad6cc6578aef79fdc74f9d5db34439f9820ade\\\"},\\\"latest\\\"],\\\"id\\\":684,\\\"jsonrpc\\\":\\\"2.0\\\"}\",\"requestMethod\":\"POST\",\"url\":\"http://127.0.0.1:8545\"}, code=CALL_EXCEPTION, version=providers/5.7.2)"}}
+[2025-07-01 10:49:16] Performance Metrics:
+  nonceGeneration: 1 calls, avg 232.97ms
+
+{"timestamp":"2025-07-01 10:49:56","operation":"nonceGeneration","durationMs":34.09,"status":"success","type":"nonce_issued","address":"0xe2c362222b6786b476152c074b05cd57eb31674a","ip":"::1"}
+{"timestamp":"2025-07-01 10:50:01","operation":"sign","durationMs":18.63}
+{"timestamp":"2025-07-01 10:50:01","operation":"signatureVerification","durationMs":41.11,"status":"success","type":"login","address":"0xe2c362222b6786b476152c074b05cd57eb31674a","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":18.6327}}
+{"timestamp":"2025-07-01 10:50:01","operation":"jwtIssuance","durationMs":24.8,"status":"success","type":"login","address":"0xe2c362222b6786b476152c074b05cd57eb31674a","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":18.6327}}
+{"timestamp":"2025-07-01 10:50:22","operation":"nonceGeneration","durationMs":63.35,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 10:50:30","operation":"sign","durationMs":3.77}
+{"timestamp":"2025-07-01 10:50:30","operation":"signatureVerification","durationMs":17.77,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.7689}}
+{"timestamp":"2025-07-01 10:50:30","operation":"jwtIssuance","durationMs":8.97,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.7689}}
+{"timestamp":"2025-07-01 10:51:26","operation":"nonceGeneration","durationMs":27,"status":"success","type":"nonce_issued","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1"}
+{"timestamp":"2025-07-01 10:51:29","operation":"sign","durationMs":2.88}
+{"timestamp":"2025-07-01 10:51:29","operation":"signatureVerification","durationMs":17.82,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":2.877}}
+{"timestamp":"2025-07-01 10:51:29","operation":"jwtIssuance","durationMs":12.39,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":2.877}}
+[2025-07-01 10:54:16] Performance Metrics:
+  nonceGeneration: 3 calls, avg 41.48ms
+  signatureVerification: 3 calls, avg 25.57ms
+  jwtIssuance: 6 calls, avg 11.91ms
+
+{"timestamp":"2025-07-01 10:59:31","operation":"nonceGeneration","durationMs":139.49,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 10:59:37","operation":"sign","durationMs":21.58}
+{"timestamp":"2025-07-01 10:59:37","operation":"signatureVerification","durationMs":138.57,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":21.5843}}
+{"timestamp":"2025-07-01 10:59:37","operation":"jwtIssuance","durationMs":35.41,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":21.5843}}
+[2025-07-01 11:04:21] Performance Metrics:
+  nonceGeneration: 1 calls, avg 139.49ms
+  signatureVerification: 1 calls, avg 138.57ms
+  jwtIssuance: 2 calls, avg 28.50ms
+
+{"timestamp":"2025-07-01 11:12:02","operation":"nonceGeneration","durationMs":75.66,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 11:12:08","operation":"sign","durationMs":13.11}
+{"timestamp":"2025-07-01 11:12:08","operation":"signatureVerification","durationMs":85.26,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":13.113}}
+{"timestamp":"2025-07-01 11:12:08","operation":"jwtIssuance","durationMs":71.53,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":13.113}}
+{"timestamp":"2025-07-01 11:15:30","operation":"nonceGeneration","durationMs":62.38,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 11:15:33","operation":"nonceGeneration","durationMs":102.38,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 11:15:45","operation":"nonceGeneration","durationMs":66.98,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 11:15:51","operation":"sign","durationMs":19.15}
+{"timestamp":"2025-07-01 11:15:51","operation":"signatureVerification","durationMs":94.86,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":19.1493}}
+{"timestamp":"2025-07-01 11:15:51","operation":"jwtIssuance","durationMs":31.46,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":19.1493}}
+{"timestamp":"2025-07-01 11:17:28","operation":"nonceGeneration","durationMs":96.29,"status":"success","type":"nonce_issued","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1"}
+{"timestamp":"2025-07-01 11:17:32","operation":"sign","durationMs":5.55}
+{"timestamp":"2025-07-01 11:17:32","operation":"signatureVerification","durationMs":33.01,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.5506}}
+{"timestamp":"2025-07-01 11:17:32","operation":"jwtIssuance","durationMs":23,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.5506}}
+[2025-07-01 11:18:28] Performance Metrics:
+  nonceGeneration: 4 calls, avg 82.01ms
+  signatureVerification: 2 calls, avg 63.94ms
+  jwtIssuance: 4 calls, avg 19.79ms
+
+{"timestamp":"2025-07-01 16:52:40","operation":"nonceGeneration","durationMs":48.9,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 16:52:45","operation":"sign","durationMs":4.7}
+{"timestamp":"2025-07-01 16:52:45","operation":"signatureVerification","durationMs":51.56,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.6973}}
+{"timestamp":"2025-07-01 16:52:45","operation":"jwtIssuance","durationMs":13.22,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.6973}}
+[2025-07-01 16:53:40] Performance Metrics:
+  nonceGeneration: 1 calls, avg 48.90ms
+  signatureVerification: 1 calls, avg 51.56ms
+  jwtIssuance: 2 calls, avg 8.96ms
+
+{"timestamp":"2025-07-01 16:55:11","operation":"nonceGeneration","durationMs":36.41,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 16:55:41","operation":"nonceGeneration","durationMs":182.98,"status":"failure","type":"login","address":"0x1b5718c1e448386e3dffe005559346137e1b9d35","ip":"::1","metadata":{"reason":"unregistered_user","error":"missing revert data in call exception; Transaction reverted without a reason string [ See: https://links.ethers.org/v5-errors-CALL_EXCEPTION ] (data=\"0x\", transaction={\"from\":\"0xA3e7A2B9649CCf6EEeA26a2b8fCFDFcfd8eD0125\",\"to\":\"0xA645a24c47A2b8bE1A02b2A3a8df52Dd8EA6587f\",\"data\":\"0xcc3d967b0000000000000000000000001b5718c1e448386e3dffe005559346137e1b9d35\",\"accessList\":null}, error={\"reason\":\"processing response error\",\"code\":\"SERVER_ERROR\",\"body\":\"{\\\"id\\\":145,\\\"jsonrpc\\\":\\\"2.0\\\",\\\"error\\\":{\\\"message\\\":\\\"VM Exception while processing transaction: revert User not registered\\\",\\\"stack\\\":\\\"CallError: VM Exception while processing transaction: revert User not registered\\\\n    at Blockchain.simulateTransaction (C:\\\\\\\\Program Files\\\\\\\\WindowsApps\\\\\\\\GanacheUI_2.7.1.0_x64__rb4352f0jd4m2\\\\\\\\app\\\\\\\\resources\\\\\\\\static\\\\\\\\node\\\\\\\\node_modules\\\\\\\\ganache\\\\\\\\dist\\\\\\\\node\\\\\\\\1.js:2:72658)\\\",\\\"code\\\":-32000,\\\"name\\\":\\\"CallError\\\",\\\"data\\\":\\\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001355736572206e6f74207265676973746572656400000000000000000000000000\\\"}}\",\"error\":{\"code\":-32000,\"data\":\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001355736572206e6f74207265676973746572656400000000000000000000000000\"},\"requestBody\":\"{\\\"method\\\":\\\"eth_call\\\",\\\"params\\\":[{\\\"from\\\":\\\"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125\\\",\\\"to\\\":\\\"0xa645a24c47a2b8be1a02b2a3a8df52dd8ea6587f\\\",\\\"data\\\":\\\"0xcc3d967b0000000000000000000000001b5718c1e448386e3dffe005559346137e1b9d35\\\"},\\\"latest\\\"],\\\"id\\\":145,\\\"jsonrpc\\\":\\\"2.0\\\"}\",\"requestMethod\":\"POST\",\"url\":\"http://127.0.0.1:8545\"}, code=CALL_EXCEPTION, version=providers/5.7.2)"}}
+{"timestamp":"2025-07-01 16:56:03","operation":"nonceGeneration","durationMs":53.46,"status":"success","type":"nonce_issued","address":"0x1b5718c1e448386e3dffe005559346137e1b9d35","ip":"::1"}
+{"timestamp":"2025-07-01 16:56:09","operation":"sign","durationMs":4.73}
+{"timestamp":"2025-07-01 16:56:09","operation":"signatureVerification","durationMs":49.93,"status":"success","type":"login","address":"0x1b5718c1e448386e3dffe005559346137e1b9d35","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.7273}}
+{"timestamp":"2025-07-01 16:56:09","operation":"jwtIssuance","durationMs":24.44,"status":"success","type":"login","address":"0x1b5718c1e448386e3dffe005559346137e1b9d35","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.7273}}
+{"timestamp":"2025-07-01 16:57:44","operation":"nonceGeneration","durationMs":56.18,"status":"success","type":"nonce_issued","address":"0x4a7c519df499c4c988cc59307e6fdfc30d818761","ip":"::1"}
+{"timestamp":"2025-07-01 16:57:52","operation":"sign","durationMs":5.45}
+{"timestamp":"2025-07-01 16:57:52","operation":"signatureVerification","durationMs":117.83,"status":"success","type":"login","address":"0x4a7c519df499c4c988cc59307e6fdfc30d818761","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.4516}}
+{"timestamp":"2025-07-01 16:57:52","operation":"jwtIssuance","durationMs":31.18,"status":"success","type":"login","address":"0x4a7c519df499c4c988cc59307e6fdfc30d818761","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.4516}}
+[2025-07-01 16:58:40] Performance Metrics:
+  nonceGeneration: 4 calls, avg 82.26ms
+  signatureVerification: 2 calls, avg 83.88ms
+  jwtIssuance: 4 calls, avg 16.45ms
+
+{"timestamp":"2025-07-01 16:59:03","operation":"nonceGeneration","durationMs":29.98,"status":"success","type":"nonce_issued","address":"0x7914a9bac62b9e08f115ddd185d311b87e021081","ip":"::1"}
+{"timestamp":"2025-07-01 16:59:08","operation":"sign","durationMs":19.13}
+{"timestamp":"2025-07-01 16:59:08","operation":"signatureVerification","durationMs":73.68,"status":"success","type":"login","address":"0x7914a9bac62b9e08f115ddd185d311b87e021081","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":19.129}}
+{"timestamp":"2025-07-01 16:59:08","operation":"jwtIssuance","durationMs":53.26,"status":"success","type":"login","address":"0x7914a9bac62b9e08f115ddd185d311b87e021081","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":19.129}}
+{"timestamp":"2025-07-01 16:59:49","operation":"nonceGeneration","durationMs":32.35,"status":"success","type":"nonce_issued","address":"0x2d482ddddd0aa4ee1870f5ca0d7e88c9c9016c31","ip":"::1"}
+{"timestamp":"2025-07-01 16:59:55","operation":"sign","durationMs":3.33}
+{"timestamp":"2025-07-01 16:59:55","operation":"signatureVerification","durationMs":27.96,"status":"success","type":"login","address":"0x2d482ddddd0aa4ee1870f5ca0d7e88c9c9016c31","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.328}}
+{"timestamp":"2025-07-01 16:59:55","operation":"jwtIssuance","durationMs":12.9,"status":"success","type":"login","address":"0x2d482ddddd0aa4ee1870f5ca0d7e88c9c9016c31","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.328}}
+{"timestamp":"2025-07-01 17:00:38","operation":"nonceGeneration","durationMs":41.91,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 17:00:42","operation":"sign","durationMs":4.61}
+{"timestamp":"2025-07-01 17:00:42","operation":"signatureVerification","durationMs":21.86,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.6085}}
+{"timestamp":"2025-07-01 17:00:42","operation":"jwtIssuance","durationMs":12.19,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.6085}}
+[2025-07-01 17:03:40] Performance Metrics:
+  nonceGeneration: 3 calls, avg 34.75ms
+  signatureVerification: 3 calls, avg 41.17ms
+  jwtIssuance: 6 calls, avg 17.57ms
+
+{"timestamp":"2025-07-01 22:16:41","operation":"nonceGeneration","durationMs":123.62,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 22:16:44","operation":"sign","durationMs":5.3}
+{"timestamp":"2025-07-01 22:16:44","operation":"signatureVerification","durationMs":26.43,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.2981}}
+{"timestamp":"2025-07-01 22:16:44","operation":"jwtIssuance","durationMs":12.47,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":5.2981}}
+{"timestamp":"2025-07-01 22:17:13","operation":"nonceGeneration","durationMs":66.6,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-01 22:17:18","operation":"sign","durationMs":6.87}
+{"timestamp":"2025-07-01 22:17:18","operation":"signatureVerification","durationMs":18.28,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":6.8735}}
+{"timestamp":"2025-07-01 22:17:18","operation":"jwtIssuance","durationMs":14.31,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":6.8735}}
+[2025-07-01 22:18:16] Performance Metrics:
+  nonceGeneration: 2 calls, avg 95.11ms
+  signatureVerification: 2 calls, avg 22.36ms
+  jwtIssuance: 4 calls, avg 9.74ms
+
+{"timestamp":"2025-07-01 22:25:08","operation":"nonceGeneration","durationMs":63.26,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-01 22:25:16","operation":"sign","durationMs":10.75}
+{"timestamp":"2025-07-01 22:25:16","operation":"signatureVerification","durationMs":32.86,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":10.7489}}
+{"timestamp":"2025-07-01 22:25:16","operation":"jwtIssuance","durationMs":23.65,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":10.7489}}
+[2025-07-01 22:28:16] Performance Metrics:
+  nonceGeneration: 1 calls, avg 63.26ms
+  signatureVerification: 1 calls, avg 32.86ms
+  jwtIssuance: 2 calls, avg 17.20ms
+
+{"timestamp":"2025-07-02 14:52:39","operation":"nonceGeneration","durationMs":395.09,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-02 14:52:44","operation":"sign","durationMs":261.41}
+{"timestamp":"2025-07-02 14:52:44","operation":"signatureVerification","durationMs":300.1,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":261.4082}}
+{"timestamp":"2025-07-02 14:52:44","operation":"jwtIssuance","durationMs":267.92,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":261.4082}}
+[2025-07-02 14:54:00] Performance Metrics:
+  nonceGeneration: 1 calls, avg 395.09ms
+  signatureVerification: 1 calls, avg 300.10ms
+  jwtIssuance: 2 calls, avg 264.67ms
+
+{"timestamp":"2025-07-02 14:58:55","operation":"nonceGeneration","durationMs":172.9,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-02 14:58:59","operation":"sign","durationMs":8.04}
+{"timestamp":"2025-07-02 14:58:59","operation":"signatureVerification","durationMs":53.75,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.0438}}
+{"timestamp":"2025-07-02 14:58:59","operation":"jwtIssuance","durationMs":13.24,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":8.0438}}
+[2025-07-02 15:03:45] Performance Metrics:
+  nonceGeneration: 1 calls, avg 172.90ms
+  signatureVerification: 1 calls, avg 53.75ms
+  jwtIssuance: 2 calls, avg 10.64ms
+
+{"timestamp":"2025-07-02 15:48:15","operation":"nonceGeneration","durationMs":213.89,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-02 15:48:18","operation":"sign","durationMs":25.8}
+{"timestamp":"2025-07-02 15:48:18","operation":"signatureVerification","durationMs":57.9,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":25.8008}}
+{"timestamp":"2025-07-02 15:48:18","operation":"jwtIssuance","durationMs":33.4,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":25.8008}}
+{"timestamp":"2025-07-02 15:58:46","operation":"nonceGeneration","durationMs":127.16,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-02 15:58:50","operation":"sign","durationMs":13.94}
+{"timestamp":"2025-07-02 15:58:50","operation":"signatureVerification","durationMs":51.34,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":13.9352}}
+{"timestamp":"2025-07-02 15:58:50","operation":"jwtIssuance","durationMs":20.64,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":13.9352}}
+{"timestamp":"2025-07-02 16:30:37","operation":"nonceGeneration","durationMs":167.66,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-02 16:30:44","operation":"sign","durationMs":181.3}
+{"timestamp":"2025-07-02 16:30:44","operation":"signatureVerification","durationMs":365.41,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":181.2972}}
+{"timestamp":"2025-07-02 16:30:44","operation":"jwtIssuance","durationMs":273.24,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":181.2972}}
+[2025-07-02 16:31:25] Performance Metrics:
+  nonceGeneration: 1 calls, avg 167.66ms
+  signatureVerification: 1 calls, avg 365.41ms
+  jwtIssuance: 2 calls, avg 227.27ms
+
+{"timestamp":"2025-07-02 16:42:34","operation":"nonceGeneration","durationMs":79.27,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-02 16:42:42","operation":"sign","durationMs":6.49}
+{"timestamp":"2025-07-02 16:42:42","operation":"signatureVerification","durationMs":34.53,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":6.4945}}
+{"timestamp":"2025-07-02 16:42:42","operation":"jwtIssuance","durationMs":32.99,"status":"success","type":"login","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":6.4945}}
+{"timestamp":"2025-07-02 16:42:53","operation":"nonceGeneration","durationMs":42.5,"status":"success","type":"nonce_issued","address":"0x9f1b99116a97033782f6548ad98136646d80c7c1","ip":"::1"}
+{"timestamp":"2025-07-02 16:43:04","operation":"nonceGeneration","durationMs":93.92,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-02 16:43:08","operation":"sign","durationMs":10.73}
+{"timestamp":"2025-07-02 16:43:08","operation":"signatureVerification","durationMs":36.05,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":10.7325}}
+{"timestamp":"2025-07-02 16:43:08","operation":"jwtIssuance","durationMs":28.82,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":10.7325}}
+{"timestamp":"2025-07-02 16:43:55","operation":"nonceGeneration","durationMs":34.11,"status":"success","type":"nonce_issued","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1"}
+{"timestamp":"2025-07-02 16:44:19","operation":"sign","durationMs":3.78}
+{"timestamp":"2025-07-02 16:44:19","operation":"signatureVerification","durationMs":33.88,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.7802}}
+{"timestamp":"2025-07-02 16:44:19","operation":"jwtIssuance","durationMs":27.86,"status":"success","type":"login","address":"0xa3e7a2b9649ccf6eeea26a2b8fcfdfcfd8ed0125","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":3.7802}}
+[2025-07-02 16:46:25] Performance Metrics:
+  nonceGeneration: 4 calls, avg 62.45ms
+  signatureVerification: 3 calls, avg 34.82ms
+  jwtIssuance: 6 calls, avg 18.45ms
+
+{"timestamp":"2025-07-02 16:58:53","operation":"nonceGeneration","durationMs":47.35,"status":"success","type":"nonce_issued","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1"}
+{"timestamp":"2025-07-02 16:58:56","operation":"sign","durationMs":4.52}
+{"timestamp":"2025-07-02 16:58:56","operation":"signatureVerification","durationMs":15.13,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.5216}}
+{"timestamp":"2025-07-02 16:58:56","operation":"jwtIssuance","durationMs":9.63,"status":"success","type":"login","address":"0xacad6cc6578aef79fdc74f9d5db34439f9820ade","ip":"::1","metadata":{"tokenExpiresIn":"1h","verificationTimeMs":0,"tokenGenerationTimeMs":4.5216}}
+[2025-07-02 17:01:25] Performance Metrics:
+  nonceGeneration: 1 calls, avg 47.35ms
+  signatureVerification: 1 calls, avg 15.13ms
+  jwtIssuance: 2 calls, avg 7.08ms
+

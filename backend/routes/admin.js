@@ -5,7 +5,9 @@ const { authorizeRole } = require('../middleware/auth');
 const { 
   getLogFiles, 
   getLogFileContent, 
-  getSystemStats 
+  getSystemStats,
+  getPerformanceLogStats,
+  getAuthLogStats
 } = require('../controllers/adminController');
 
 // Apply auth and admin middleware to all routes
@@ -16,5 +18,9 @@ router.use(authorizeRole('admin'));
 router.get('/logs', getLogFiles);
 router.get('/logs/:filename', getLogFileContent);
 router.get('/stats', getSystemStats);
+
+// --- Log Stats Aggregation Endpoints ---
+router.get('/logstats/performance', getPerformanceLogStats);
+router.get('/logstats/auth', getAuthLogStats);
 
 module.exports = router;

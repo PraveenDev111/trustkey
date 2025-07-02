@@ -133,8 +133,134 @@ getSystemStats = async (req, res) => {
   }
 };
 
+// --- Aggregated Log Stats ---
+
+// Helper: parse log file lines (filtering out summary blocks for performance.log)
+function parseLogLines(filePath, filterFn = null) {
+  if (!fs.existsSync(filePath)) return [];
+  const content = fs.readFileSync(filePath, 'utf8');
+  const lines = content.split('\n').filter(line => line.trim() !== '');
+  let jsonLines = [];
+  for (const line of lines) {
+    // Skip summary blocks (Performance Metrics:)
+    if (line.startsWith('[') && line.includes('Performance Metrics:')) continue;
+    if (line.startsWith('  ')) continue;
+    try {
+      const obj = JSON.parse(line);
+      if (!filterFn || filterFn(obj)) jsonLines.push(obj);
+    } catch (e) {
+      // Not JSON, skip
+    }
+  }
+  return jsonLines;
+}
+
+// GET /admin/logstats/performance
+const getPerformanceLogStats = async (req, res) => {
+  try {
+    const perfLogPath = path.join(LOGS_DIR, 'performance.log');
+    const logs = parseLogLines(perfLogPath);
+    const operations = {};
+    const errorsByType = {};
+    const timeline = {};
+
+    logs.forEach(entry => {
+      if (!entry.operation) return;
+      // Aggregate by operation
+      if (!operations[entry.operation]) {
+        operations[entry.operation] = { count: 0, totalDuration: 0, errors: 0, failures: 0, successes: 0 };
+      }
+      operations[entry.operation].count++;
+      operations[entry.operation].totalDuration += Number(entry.durationMs || 0);
+      if (entry.status === 'error') {
+        operations[entry.operation].errors++;
+        if (entry.error) {
+          errorsByType[entry.error] = (errorsByType[entry.error] || 0) + 1;
+        }
+      } else if (entry.status === 'failure') {
+        operations[entry.operation].failures++;
+        if (entry.metadata && entry.metadata.reason) {
+          errorsByType[entry.metadata.reason] = (errorsByType[entry.metadata.reason] || 0) + 1;
+        }
+      } else if (entry.status === 'success') {
+        operations[entry.operation].successes++;
+      }
+      // Timeline (per minute)
+      if (entry.timestamp) {
+        const minute = entry.timestamp.slice(0, 16); // 'YYYY-MM-DD HH:MM'
+        if (!timeline[minute]) timeline[minute] = 0;
+        timeline[minute]++;
+      }
+    });
+    // Prepare response
+    const opStats = {};
+    Object.entries(operations).forEach(([op, data]) => {
+      opStats[op] = {
+        count: data.count,
+        avgDuration: data.count ? (data.totalDuration / data.count) : 0,
+        errors: data.errors,
+        failures: data.failures,
+        successes: data.successes
+      };
+    });
+    const timelineArr = Object.entries(timeline).map(([minute, requests]) => ({ minute, requests })).sort((a, b) => a.minute.localeCompare(b.minute));
+    res.json({
+      success: true,
+      operations: opStats,
+      errorsByType,
+      timeline: timelineArr
+    });
+  } catch (error) {
+    console.error('Error aggregating performance log stats:', error);
+    res.status(500).json({ success: false, error: 'Failed to aggregate performance log stats' });
+  }
+};
+
+// GET /admin/logstats/auth
+const getAuthLogStats = async (req, res) => {
+  try {
+    const authLogPath = path.join(LOGS_DIR, 'auth.log');
+    const logs = parseLogLines(authLogPath);
+    const loginAttempts = [];
+    const outcomes = { success: 0, failure: 0, locked: 0, error: 0 };
+    const reasons = {};
+    const timeline = {};
+    logs.forEach(entry => {
+      if (entry.type === 'login') {
+        loginAttempts.push({ timestamp: entry.timestamp, status: entry.status });
+        if (entry.status === 'success') outcomes.success++;
+        else if (entry.status === 'failure') outcomes.failure++;
+        else if (entry.status === 'locked') outcomes.locked++;
+        else if (entry.status === 'error') outcomes.error++;
+        if (entry.metadata && entry.metadata.reason) {
+          reasons[entry.metadata.reason] = (reasons[entry.metadata.reason] || 0) + 1;
+        }
+        // Timeline (per minute, by status)
+        if (entry.timestamp) {
+          const minute = entry.timestamp.slice(0, 16);
+          if (!timeline[minute]) timeline[minute] = { success: 0, failure: 0, locked: 0, error: 0 };
+          timeline[minute][entry.status] = (timeline[minute][entry.status] || 0) + 1;
+        }
+      }
+    });
+    const timelineArr = Object.entries(timeline).map(([minute, v]) => ({ minute, ...v })).sort((a, b) => a.minute.localeCompare(b.minute));
+    res.json({
+      success: true,
+      loginAttempts,
+      outcomes,
+      reasons,
+      timeline: timelineArr
+    });
+  } catch (error) {
+    console.error('Error aggregating auth log stats:', error);
+    res.status(500).json({ success: false, error: 'Failed to aggregate auth log stats' });
+  }
+};
+
 module.exports = {
   getLogFiles,
   getLogFileContent,
-  getSystemStats
+  getSystemStats,
+  getPerformanceLogStats,
+  getAuthLogStats
 };

@@ -1,0 +1,55 @@
+.user-manager {
+  width: 100%;
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+.user-manager .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.user-manager .header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.user-manager .user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-manager .user-table th {
+  background: #f8f9fa;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.user-manager .user-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.user-manager .icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.user-manager .icon-btn:hover {
+  background: #f8f9fa;
+}
+
+.user-manager .no-content {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}

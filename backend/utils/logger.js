@@ -4,6 +4,8 @@ const { format } = require('date-fns');
 
 const logFilePath = path.join(__dirname, '../logs/auth.log');
 const perfLogPath = path.join(__dirname, '../logs/performance.log');
+const actionsLogPath = path.join(__dirname, '../logs/actions.log');
+
 
 // Performance metrics store
 const perfMetrics = {
@@ -125,10 +127,37 @@ function setupLogRotation() {
     // Implement log rotation if needed
     // e.g., compress old logs, limit log file size, etc.
 }
+/**
+* Logs a specific action with details
+* @param {string} action - The action being performed (e.g., 'certificate_revoked')
+* @param {string} address - The Ethereum address of the user performing the action
+* @param {Object} metadata - Additional context about the action
+* @returns {boolean} - True if logging was successful
+*/
+function logAction(action, address, metadata = {}) {
+   try {
+       const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+       const logEntry = {
+           timestamp,
+           action,
+           address: address?.toLowerCase(),
+           ...metadata
+       };
+       
+       ensureLogsDirectory();
+       fs.appendFileSync(actionsLogPath, JSON.stringify(logEntry) + '\n', 'utf8');
+       return true;
+   } catch (error) {
+       console.error('Failed to write action log:', error);
+       return false;
+   }
+}
+
 
 module.exports = {
     logAuthAttempt,
     logPerformance,
     trackPerformance,
-    setupLogRotation
+    setupLogRotation,
+    logAction
 };

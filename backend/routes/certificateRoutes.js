@@ -55,7 +55,14 @@ router.post('/certificates/:address/create', async (req, res, next) => {
   };
   next();
 }, createCertificate);
-router.post('/certificates/revoke/:address', revokeCertificate);
+router.post('/certificates/revoke/:address', async (req, res, next) => {
+  // Manually set a mock user for testing
+  req.user = {
+    address: req.params.address.toLowerCase(),
+    role: 'user'  // Normal users can revoke their own certificates
+  };
+  next();
+}, revokeCertificate);
 router.get('/certificates/keys/:address', async (req, res, next) => {
   // Manually set a mock user for testing
   req.user = {

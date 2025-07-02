@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaBars, FaCog, FaTachometerAlt, FaVial, FaCertificate, FaKey } from 'react-icons/fa';
+import { FaBars, FaCog, FaTachometerAlt, FaVial, FaCertificate, FaKey, FaUsers } from 'react-icons/fa';
 import logo from '../assets/trustkey1.png';
 import { useNavigate } from 'react-router-dom';
 import { saveAs } from 'file-saver';
@@ -7,9 +7,55 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FaCopy, FaDownload } from 'react-icons/fa';
 import CertificateManager from './CertificateManager';
 import PublicKeyManager from './PublicKeyManager';
+import UserManager from './UserManager';
 import '../styles/Dashboard.css';
 import '../styles/CertificateManager.css';
+import '../styles/UserManager.css';
 import { ADMIN_ADDRESS, API_BASE_URL } from '../config';
+
+// Add UserManager styles
+const USER_MANAGER_STYLES = {
+  card: {
+    width: '100%',
+    margin: '1rem 0',
+    padding: '1.5rem',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    background: '#fff'
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1.5rem'
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse'
+  },
+  th: {
+    background: '#f8f9fa',
+    padding: '1rem',
+    textAlign: 'left',
+    borderBottom: '2px solid #dee2e6'
+  },
+  td: {
+    padding: '1rem',
+    borderBottom: '1px solid #dee2e6'
+  },
+  iconBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '0.25rem',
+    borderRadius: '4px'
+  },
+  noContent: {
+    textAlign: 'center',
+    padding: '2rem',
+    color: '#6c757d'
+  }
+};
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -255,7 +301,9 @@ const Dashboard = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" onClick={() => setSidebarOpen(false)}><FaVial /><span>Test</span></a>
+                  <a href="#" onClick={() => setActiveSection('users')}>
+                    <FaUsers /><span>Users</span>
+                  </a>
                 </li>
               </ul>
             </nav>
@@ -335,10 +383,12 @@ const Dashboard = () => {
                     <tr>
                       <th>Certificate Status</th>
                       <td className="value">
-                        {certificate ? (
-                          <span className="status-badge active">Active</span>
-                        ) : (
+                        {!certificate ? (
                           <span className="status-badge inactive">Not Issued</span>
+                        ) : certificate.isRevoked ? (
+                          <span className="status-badge inactive">Revoked</span>
+                        ) : (
+                          <span className="status-badge active">Active</span>
                         )}
                       </td>
                     </tr>
@@ -373,10 +423,12 @@ const Dashboard = () => {
                       <tr>
                         <th style={{ textAlign: 'left', padding: 8, border: '1px solid #e5e7eb' }}>Certificate Status</th>
                         <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
-                          {certificate ? (
-                            <span className="status-badge active">Active</span>
-                          ) : (
+                          {!certificate ? (
                             <span className="status-badge inactive">Not Issued</span>
+                          ) : certificate.isRevoked ? (
+                            <span className="status-badge inactive">Revoked</span>
+                          ) : (
+                            <span className="status-badge active">Active</span>
                           )}
                         </td>
                       </tr>
@@ -449,6 +501,8 @@ const Dashboard = () => {
             />
           ) : activeSection === 'publicKeys' ? (
             <PublicKeyManager userAddress={userDetails.address} />
+          ) : activeSection === 'users' ? (
+            <UserManager userAddress={userDetails.address} />
           ) : null}
         </main>
       </div>
